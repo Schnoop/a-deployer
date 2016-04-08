@@ -1,0 +1,22 @@
+{
+  "name": "antwerpes/a-deployer",
+  "description": "A-Deployer - (S)FTP deployment tool",
+  "require": {
+    "php": ">=5.4.0",
+    "league/climate": "^3.2",
+    "league/flysystem": "^1.0",
+    "league/flysystem-sftp": "^1.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Antwerpes\\ADeployer\\": "src"
+    }
+  },
+  "authors": [
+    {
+      "name": "Thorsten Daners",
+      "email": "thorsten.daners@antwerpes.de"
+    }
+  ]
+}
