@@ -3,10 +3,10 @@
   "description": "A-Deployer - (S)FTP deployment tool",
   "require": {
     "php": ">=5.4.0",
-    "league/climate": "^3.2",
     "league/flysystem": "^1.0",
     "league/flysystem-sftp": "^1.0",
-    "hassankhan/config": "^0.10.0"
+    "hassankhan/config": "^0.10.0",
+    "corneltek/cliframework": "^2.8"
   },
   "license": "MIT",
   "autoload": {

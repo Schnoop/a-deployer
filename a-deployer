@@ -26,9 +26,5 @@ if (!defined('COMPOSER_INSTALL')) {
 }
 
 require COMPOSER_INSTALL;
-try {
-    $aDeployer = new Antwerpes\ADeployer\Runner();
-    $aDeployer->run();
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
+$app = new \Antwerpes\ADeployer\Console();
+$app->runWithTry($argv);
