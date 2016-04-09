@@ -7,13 +7,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class GreetCommand
+ * Class CreateCommand
  *
  * @package Antwerpes\ADeployer\Command
  */
-class Create extends AbstractCommand
+class CreateCommand extends AbstractCommand
 {
 
+    /**
+     * @var string
+     */
     protected $data = "; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.\n
 [staging]
 quickmode = ftp://example:password@production-example.com:21/path/to/installation\n
@@ -58,7 +61,9 @@ port = 22";
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        file_put_contents($this->getFullConfigPath(), '');
+        if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
+            $output->writeln('<error>Sample ' . $this->config . ' file has not been created.</error>');
+        }
         $output->writeln('<info>Sample ' . $this->config . ' file created.</info>');
     }
 }

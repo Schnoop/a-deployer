@@ -2,6 +2,8 @@
 
 namespace Antwerpes\ADeployer\Traits;
 
+use SebastianBergmann\Git\Git;
+use SebastianBergmann\Git\RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,7 +16,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait Command
 {
 
+    /**
+     * Config file.
+     *
+     * @var string
+     */
     protected $config = 'a-deployer.ini';
+
+    /**
+     * Git directory.
+     *
+     * @var string
+     */
+    protected $git = '.git';
 
     /**
      * Print application banner
@@ -28,6 +42,7 @@ trait Command
     {
         $this->printApplicationBanner($output);
         $this->checkForConfigurationFile();
+        $this->checkForGitFolder();
     }
 
     /**
@@ -59,10 +74,38 @@ trait Command
     }
 
     /**
+     * Check for valid git repository
+     *
+     * @return Git
+     * @throws \Exception
+     */
+    protected function checkForGitFolder()
+    {
+        try {
+            $repository = new Git($this->getGitDirectory());
+        } catch (RuntimeException $e) {
+            throw new \Exception('Whoooops! ' . $this->getGitDirectory() . ' is not a valid git repository.');
+        }
+        return $repository;
+    }
+
+    /**
+     * Returns full path to config file
+     *
      * @return string
      */
     protected function getFullConfigPath()
     {
         return getcwd() . DIRECTORY_SEPARATOR . $this->config;
+    }
+
+    /**
+     * Returns full path to git repository
+     *
+     * @return string
+     */
+    protected function getGitDirectory()
+    {
+        return getcwd() . DIRECTORY_SEPARATOR . $this->git;
     }
 }

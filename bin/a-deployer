@@ -8,7 +8,8 @@ use Symfony\Component\Console\Application;
 $command = new \Antwerpes\ADeployer\Command\Support\ListCommand();
 
 $application = new Application('A-Deployer', '1.0');
-$application->add(new \Antwerpes\ADeployer\Command\Config\Create());
+$application->add(new \Antwerpes\ADeployer\Command\Config\CreateCommand());
+$application->add(new \Antwerpes\ADeployer\Command\Target\ListCommand());
 $application->add($command);
 $application->setDefaultCommand($command->getName());
 $application->run();
