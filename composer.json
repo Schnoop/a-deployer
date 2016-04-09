@@ -5,13 +5,12 @@
     "php": ">=5.4.0",
     "league/flysystem": "^1.0",
     "league/flysystem-sftp": "^1.0",
-    "hassankhan/config": "^0.10.0",
-    "corneltek/cliframework": "^2.8"
+    "symfony/console": "^3.0"
   },
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Antwerpes\\ADeployer\\": "src"
+      "Antwerpes\\ADeployer\\": "src/"
     }
   },
   "authors": [

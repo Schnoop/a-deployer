@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+
+$command = new \Antwerpes\ADeployer\Command\Support\ListCommand();
+
+$application = new Application('A-Deployer', '1.0');
+$application->add(new \Antwerpes\ADeployer\Command\Config\Create());
+$application->add($command);
+$application->setDefaultCommand($command->getName());
+$application->run();

@@ -1,0 +1,26 @@
+{
+  "output": "a-deployer.phar",
+  "chmod": "0755",
+  "compactors": [
+    "Herrera\\Box\\Compactor\\Php"
+  ],
+  "extract": false,
+  "finder": [
+    {
+      "name": [
+        "*.php"
+      ],
+      "exclude": [
+        "Tests",
+        "tests"
+      ],
+      "in": [
+        "vendor",
+        "src"
+      ]
+    }
+  ],
+  "web": false,
+  "stub": true,
+  "main": "bin/a-deployer"
+}
