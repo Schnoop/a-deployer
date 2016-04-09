@@ -1,18 +1,19 @@
 <?php
 
-namespace Antwerpes\ADeployer\Command\Target;
+namespace Antwerpes\ADeployer\Command\Deployment;
 
 use Antwerpes\ADeployer\Command\AbstractCommand;
 use Antwerpes\ADeployer\Traits\Command as CommandTrait;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ListCommand
+ * Class RunCommand
  *
- * @package Antwerpes\ADeployer\Command\Support;
+ * @package Antwerpes\ADeployer\Command\Deployment;
  */
-class ListCommand extends AbstractCommand
+class RunCommand extends AbstractCommand
 {
 
     use CommandTrait;
@@ -22,8 +23,13 @@ class ListCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('targets')
-            ->setDescription('List all available deployment targets.');
+        $this->setName('run')
+            ->setDescription('Run deployment')
+            ->addArgument(
+                'target',
+                InputArgument::REQUIRED,
+                'Where to deploy the code'
+            )->addOption('dry-run', null, null, 'Print what would happen.');
     }
 
     /**

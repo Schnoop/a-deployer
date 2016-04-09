@@ -2,6 +2,7 @@
 
 namespace Antwerpes\ADeployer\Traits;
 
+use Exception;
 use SebastianBergmann\Git\Git;
 use SebastianBergmann\Git\RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -41,8 +42,8 @@ trait Command
     public function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->printApplicationBanner($output);
-        $this->checkForConfigurationFile();
-        $this->checkForGitFolder();
+        $this->getConfig();
+        $this->getGitInstance();
     }
 
     /**
@@ -65,11 +66,20 @@ trait Command
 
     /**
      * Check if configuration file exists and print message.
+     *
+     * @return array
+     * @throws Exception
      */
-    protected function checkForConfigurationFile()
+    protected function getConfig()
     {
-        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'a-deployer.ini') === false) {
-            throw new \Exception('Whoooops! ' . $this->getFullConfigPath() . ' does not exist.');
+        if (file_exists($this->getFullConfigPath()) === false) {
+            throw new Exception('Whoooops! ' . $this->getFullConfigPath() . ' does not exist.');
+        }
+        $values = parse_ini_file($this->getFullConfigPath(), true);
+        if ($values === false) {
+            throw new \Exception($this->getFullConfigPath() . ' is not a valid .ini file.');
+        } else {
+            return $values;
         }
     }
 
@@ -77,14 +87,14 @@ trait Command
      * Check for valid git repository
      *
      * @return Git
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function checkForGitFolder()
+    protected function getGitInstance()
     {
         try {
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
-            throw new \Exception('Whoooops! ' . $this->getGitDirectory() . ' is not a valid git repository.');
+            throw new Exception('Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
         }
         return $repository;
     }

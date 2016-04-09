@@ -20,7 +20,7 @@ class CreateCommand extends AbstractCommand
     protected $data = "; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.\n
 [staging]
 quickmode = ftp://example:password@production-example.com:21/path/to/installation\n
-[staging]
+[production]
 scheme = sftp
 user = example
 pass = password
