@@ -48,4 +48,14 @@ class Config
         return in_array($target, $this->getAvailableTargets());
     }
 
+    /**
+     * Returns true if deployment is configured as critical.
+     *
+     * @return boolean
+     */
+    public function isCritialDeployment($target)
+    {
+        return isset($this->config[$target]['critical']) && $this->config[$target]['critical'] == 1;
+    }
+
 }

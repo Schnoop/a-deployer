@@ -4,6 +4,7 @@ namespace Antwerpes\ADeployer\Command\Deployment;
 
 use Antwerpes\ADeployer\Command\AbstractCommand;
 use Antwerpes\ADeployer\Traits\Command as CommandTrait;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -62,6 +63,12 @@ class RunCommand extends AbstractCommand
         $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
         $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
         $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
+
+        if ($this->getConfig()->isCritialDeployment($target) === true) {
+            $style = new OutputFormatterStyle('white', 'red', ['bold']);
+            $output->getFormatter()->setStyle('fire', $style);
+            $output->writeln('<fire>BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT</>');
+        }
     }
 
     /**
@@ -75,7 +82,8 @@ class RunCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('force') === false) {
+        $target = $input->getArgument('target');
+        if ($input->getOption('force') === false || $this->getConfig()->isCritialDeployment($target) === true) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 'Continue with this action? (y|j|yes|ja): ',
