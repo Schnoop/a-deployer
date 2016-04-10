@@ -2,8 +2,9 @@
 
 namespace Antwerpes\ADeployer\Traits;
 
+use Antwerpes\ADeployer\Service\Config;
+use Antwerpes\ADeployer\Service\Git;
 use Exception;
-use SebastianBergmann\Git\Git;
 use SebastianBergmann\Git\RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -67,7 +68,7 @@ trait Command
     /**
      * Check if configuration file exists and print message.
      *
-     * @return array
+     * @return Config
      * @throws Exception
      */
     protected function getConfig()
@@ -79,7 +80,7 @@ trait Command
         if ($values === false) {
             throw new \Exception($this->getFullConfigPath() . ' is not a valid .ini file.');
         } else {
-            return $values;
+            return new Config($values);
         }
     }
 

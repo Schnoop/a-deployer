@@ -6,7 +6,10 @@ use Antwerpes\ADeployer\Command\AbstractCommand;
 use Antwerpes\ADeployer\Traits\Command as CommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Class RunCommand
@@ -29,7 +32,36 @@ class RunCommand extends AbstractCommand
                 'target',
                 InputArgument::REQUIRED,
                 'Where to deploy the code'
-            )->addOption('dry-run', null, null, 'Print what would happen.');
+            )->addOption('dry-run', null, null, 'Print what would happen.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.');
+    }
+
+    /**
+     * Print application banner
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+
+        $target = $input->getArgument('target');
+        if ($this->getConfig()->isAvailableTarget($target) === false) {
+            throw new \Exception($target . ' is not a known deployment target.');
+        }
+
+        $revision = $this->getGitInstance()->getLatestRevision();
+        $branch = $this->getGitInstance()->getCurrentBranch();
+
+        $output->writeln('<info>Will deployment revision </info><comment>"' . $revision['sha1'] . '"</comment><info> from </info><comment>"' .
+            $branch . '"</comment><info> branch to target </info><comment>"' . $target . '"</comment>');
+        $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
+        $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
+        $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
     }
 
     /**
@@ -39,17 +71,22 @@ class RunCommand extends AbstractCommand
      * @param OutputInterface $output
      *
      * @return void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->getConfig();
-
-        $output->writeln('<info>Known deployment targets:</info>');
-        $output->writeln('');
-        foreach (array_keys($config) as $target) {
-            $output->writeln('<comment>- ' . $target . '</comment>');
+        if ($input->getOption('force') === false) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(
+                'Continue with this action? (y|j|yes|ja): ',
+                false,
+                '/^(y|j|yes|ja)/i'
+            );
+            if ($helper->ask($input, $output, $question) === false) {
+                return;
+            }
         }
-        $output->writeln('');
-        $output->writeln('<info>To start a deployment run "(php) bin/a-deployer run --target <target>"</info>');
+        echo 'Go!';
+
     }
 }
