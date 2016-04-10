@@ -33,7 +33,7 @@ class RunCommand extends AbstractCommand
                 'target',
                 InputArgument::REQUIRED,
                 'Where to deploy the code'
-            )->addOption('dry-run', null, null, 'Print what would happen.')
+            )->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print what would happen.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.');
     }
 
@@ -63,11 +63,16 @@ class RunCommand extends AbstractCommand
         $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
         $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
         $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
+        $output->writeln('');
 
+        // Show alert message.
         if ($this->getConfig()->isCritialDeployment($target) === true) {
             $style = new OutputFormatterStyle('white', 'red', ['bold']);
             $output->getFormatter()->setStyle('fire', $style);
-            $output->writeln('<fire>BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT</>');
+            $output->writeln('<fire>-----------------------------------------------</>');
+            $output->writeln('<fire>!  BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT  !</>');
+            $output->writeln('<fire>-----------------------------------------------</>');
+            $output->writeln('');
         }
     }
 
@@ -83,7 +88,7 @@ class RunCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $target = $input->getArgument('target');
-        if ($input->getOption('force') === false || $this->getConfig()->isCritialDeployment($target) === true) {
+        if (($input->getOption('force') === false || $this->getConfig()->isCritialDeployment($target) === true) && $input->getOption('dry-run') === false) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 'Continue with this action? (y|j|yes|ja): ',
@@ -93,6 +98,11 @@ class RunCommand extends AbstractCommand
             if ($helper->ask($input, $output, $question) === false) {
                 return;
             }
+        }
+
+
+        if ($input->getOption('dry-run') === true) {
+            $output->writeln('<comment>Dry run: No remote files will be modified.</comment>');
         }
         echo 'Go!';
 
