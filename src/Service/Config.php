@@ -2,6 +2,8 @@
 
 namespace Antwerpes\ADeployer\Service;
 
+use Antwerpes\ADeployer\Model\Target;
+
 /**
  * Class ConfigFile
  *
@@ -11,11 +13,11 @@ class Config
 {
 
     /**
-     * Config values
+     * Array with targets
      *
-     * @var array
+     * @var Target[]
      */
-    protected $config = [];
+    protected $targets = [];
 
     /**
      * Config constructor.
@@ -23,17 +25,9 @@ class Config
      */
     public function __construct(array $config)
     {
-        $this->config = $config;
-    }
-
-    /**
-     * Returns array with known deployment targets.
-     *
-     * @return array
-     */
-    public function getAvailableTargets()
-    {
-        return array_keys($this->config);
+        foreach ($config as $name => $target) {
+            $this->targets[$name] = new Target($name, $target);
+        }
     }
 
     /**
@@ -45,17 +39,32 @@ class Config
      */
     public function isAvailableTarget($target)
     {
-        return in_array($target, $this->getAvailableTargets());
+        return isset($this->targets[$target]);
     }
 
     /**
-     * Returns true if deployment is configured as critical.
+     * Returns array with known deployment targets.
      *
-     * @return boolean
+     * @return array
      */
-    public function isCritialDeployment($target)
+    public function getAvailableTargets()
     {
-        return isset($this->config[$target]['critical']) && $this->config[$target]['critical'] == 1;
+        return array_keys($this->targets);
+    }
+
+    /**
+     * Returns config for given $target, of empty array if not found
+     *
+     * @param string $target
+     *
+     * @return Target|null
+     */
+    public function getConfigForTarget($target)
+    {
+        if (isset($this->targets[$target]) === true) {
+            return $this->targets[$target];
+        }
+        return null;
     }
 
 }

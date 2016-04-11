@@ -26,6 +26,13 @@ trait Command
     protected $config = 'a-deployer.ini';
 
     /**
+     * Config file.
+     *
+     * @var string
+     */
+    protected $password = '.a-deployer';
+
+    /**
      * Git directory.
      *
      * @var string
@@ -35,7 +42,7 @@ trait Command
     /**
      * Print application banner
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -73,15 +80,36 @@ trait Command
      */
     protected function getConfig()
     {
-        if (file_exists($this->getFullConfigPath()) === false) {
-            throw new Exception('Whoooops! ' . $this->getFullConfigPath() . ' does not exist.');
+        return new Config($this->openIniFile($this->getFullConfigPath()));
+    }
+
+    /**
+     * Open ini file, parse and return as an array
+     *
+     * @param string $file
+     * @return array
+     * @throws Exception
+     */
+    protected function openIniFile($file)
+    {
+        if (file_exists($file) === false) {
+            throw new Exception('Whoooops! ' . $file . ' does not exist.');
         }
-        $values = parse_ini_file($this->getFullConfigPath(), true);
+        $values = parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Exception($this->getFullConfigPath() . ' is not a valid .ini file.');
-        } else {
-            return new Config($values);
+            throw new \Exception($file . ' is not a valid .ini file.');
         }
+        return $values;
+    }
+
+    /**
+     * Returns full path to config file
+     *
+     * @return string
+     */
+    protected function getFullConfigPath()
+    {
+        return getcwd() . DIRECTORY_SEPARATOR . $this->config;
     }
 
     /**
@@ -101,16 +129,6 @@ trait Command
     }
 
     /**
-     * Returns full path to config file
-     *
-     * @return string
-     */
-    protected function getFullConfigPath()
-    {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->config;
-    }
-
-    /**
      * Returns full path to git repository
      *
      * @return string
@@ -118,5 +136,50 @@ trait Command
     protected function getGitDirectory()
     {
         return getcwd() . DIRECTORY_SEPARATOR . $this->git;
+    }
+
+    /**
+     * Print red banner to tell the user that he has to be careful.
+     *
+     * @param OutputInterface $output
+     *
+     * @return void
+     */
+    protected function printCriticalBanner(OutputInterface $output)
+    {
+        $style = new OutputFormatterStyle('white', 'red', ['bold']);
+        $output->getFormatter()->setStyle('fire', $style);
+        $output->writeln('<fire>-----------------------------------------------</>');
+        $output->writeln('<fire>!  BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT  !</>');
+        $output->writeln('<fire>-----------------------------------------------</>');
+        $output->writeln('');
+    }
+
+    /**
+     * Print info banner about deployment.
+     *
+     * @param OutputInterface $output
+     */
+    protected function printDeploymentBanner(InputInterface $input, OutputInterface $output)
+    {
+        $target = $input->getArgument('target');
+        $revision = $this->getGitInstance()->getLatestRevision();
+        $branch = $this->getGitInstance()->getCurrentBranch();
+        $output->writeln('<info>Will deployment revision </info><comment>"' . $revision['sha1'] . '"</comment><info> from </info><comment>"' .
+            $branch . '"</comment><info> branch to target </info><comment>"' . $target . '"</comment>');
+        $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
+        $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
+        $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
+        $output->writeln('');
+    }
+
+    /**
+     * Returns full path to password file
+     *
+     * @return string
+     */
+    protected function getFullPasswordFilePath()
+    {
+        return getcwd() . DIRECTORY_SEPARATOR . $this->password;
     }
 }

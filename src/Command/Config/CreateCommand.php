@@ -17,16 +17,93 @@ class CreateCommand extends AbstractCommand
     /**
      * @var string
      */
-    protected $data = "; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.\n
-[staging]
-quickmode = ftp://example:password@production-example.com:21/path/to/installation\n
+    protected $data = "; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.
+
 [production]
-scheme = sftp
-user = example
-pass = password
-host = staging-example.com
-path = /path/to/installation
-port = 22";
+; FTP
+server[scheme] = ftp
+
+; Set the hostname/IP for connection
+server[host] = example.com
+
+; Set the ftp port. Default for FTP: 21
+server[port] = 21
+
+; Username
+server[username] = foo
+
+; Password
+server[password] = bar
+
+; Use SSL or not
+server[ssl] = sftp
+
+; Set the amount of seconds before the connection should timeout. Default: 90
+server[timeout] = 90
+
+; Set the root folder to work from.
+server[root] = /
+
+; Set the private permission value. Default: 0700
+server[permPrivate] = 0700
+
+; Set the public permission value. Default: 0744
+server[permPublic] = 0744
+
+; Set if passive mode should be used.  Default: true
+server[passive] = true
+
+; Set the transfer mode. Default: FTP_BINARY(2)
+server[transferMode] = 2
+
+; Set the FTP system type (windows or unix).
+server[systemType] = unix
+
+; If set to true, a visual notification will appear to tell the user that this deployment may be critical.
+; This is maybe useful for live deployments
+; It is NOT possible to bypass this via the --force flag. Default: false
+critical = true
+
+[production-2]
+; SFTP
+server[scheme] = sftp
+
+; Set the hostname/IP for connection
+server[host] = example.com
+
+; Set the ftp port. Default for SFTP: 22
+server[port] = 22
+
+; Set the username to use for the connection
+server[username] = foo
+
+; Set the password to use for the connection
+server[password] = bar
+
+; Set the amount of seconds before the connection should timeout. Default: 90
+server[timeout] = 90
+
+; Set the root folder to work from.
+server[root] = /
+
+; Path or content of your private key
+server[privateKey] = path/to/or/contents/of/privatekey
+
+; Set the private permission value. Default: 0700
+server[permPrivate] = 0700
+
+; Set the public permission value.  Default: 0744
+server[permPublic] = 0744
+
+; Set permissions for new directory. Default: 0755
+server[directoryPerm] = 0755
+
+; If set to true, a visual notification will appear to tell the user that this deployment may be critical.
+; This is maybe useful for live deployments
+; It is NOT possible to bypass this via the --force flag. Default: false
+critical = true
+
+";
 
     /**
      * Print application banner
