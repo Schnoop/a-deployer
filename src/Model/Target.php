@@ -100,4 +100,30 @@ class Target implements \ArrayAccess
         return $this->name;
     }
 
+    /**
+     * Returns array with files to exclude
+     *
+     * @return array
+     */
+    public function getExcludes()
+    {
+        if (isset($this->config['exclude']) === true) {
+            return $this->config['exclude'];
+        }
+        return array();
+    }
+
+    /**
+     * Returns array with files to include
+     *
+     * @return array
+     */
+    public function getIncludes()
+    {
+        if (isset($this->config['include']) === true) {
+            return $this->config['include'];
+        }
+        return array();
+    }
+
 }

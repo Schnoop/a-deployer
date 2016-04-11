@@ -4,8 +4,12 @@ namespace Antwerpes\ADeployer\Command\Deployment;
 
 use Antwerpes\ADeployer\Command\AbstractCommand;
 use Antwerpes\ADeployer\Model\Target;
+use Antwerpes\ADeployer\Model\Transfer;
 use Antwerpes\ADeployer\Service\Compare;
 use Antwerpes\ADeployer\Service\Connection;
+use Antwerpes\ADeployer\Service\Deployment;
+use Antwerpes\ADeployer\Service\Filter;
+use Antwerpes\ADeployer\Service\Includes;
 use Antwerpes\ADeployer\Traits\Command as CommandTrait;
 use Exception;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -82,7 +86,9 @@ class RunCommand extends AbstractCommand
                 InputArgument::REQUIRED,
                 'Where to deploy the code'
             )->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print what would happen.')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.');
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.')
+            ->addOption('no-includes', null, InputOption::VALUE_NONE,
+                'Skip all includes, although configured in config file.');
     }
 
     /**
@@ -109,21 +115,39 @@ class RunCommand extends AbstractCommand
             $this->targetConfig->setPassword($this->getPassword());
         }
 
-        // Last call for action!
-        if ($this->reallyProceedWithDeployment() === false) {
-            return;
-        }
-
         $service = new Connection();
         $connection = $service->getConnection($this->targetConfig);
 
         $compare = new Compare($connection, $this->getGitInstance());
         $resultSet = $compare->compare($this->getGitInstance()->getLatestRevisionHash());
+
+        $filter = new Filter($this->targetConfig->getExcludes());
+        $resultSet = $filter->filter($resultSet);
+
+        if ($input->getOption('no-includes') === false) {
+            $includes = new Includes($this->targetConfig->getIncludes());
+            $resultSet = $includes->add($resultSet);
+        }
+
+        // Dry run. Print out and leave.
+        if ($input->getOption('dry-run') === true) {
+            $this->printDryRun($resultSet);
+            return;
+        }
+
+        $deployment = new Deployment($connection);
+        $deployment->run($resultSet);
+
         echo '<pre>' . print_r($resultSet, 1) . '</pre>';
         die();
 
         die();
         echo 'Go!';
+
+        // Last call for action!
+        if ($this->reallyProceedWithDeployment() === false) {
+            return;
+        }
 
     }
 
@@ -157,6 +181,35 @@ class RunCommand extends AbstractCommand
         }
         $this->output->writeln('<comment>Password received. Continuing deployment ...</comment>');
         return $password;
+    }
+
+    /**
+     * Print out what will happen.
+     *
+     * @param Transfer $transfer
+     *
+     * @return void
+     */
+    protected function printDryRun(Transfer $transfer)
+    {
+        if (count($transfer->getFilesToUpload()) === 0 && count($transfer->getFilesToDelete()) === 0) {
+            $this->output->writeln('<info>   No files to upload.</info>');
+            return;
+        }
+
+        if (count($transfer->getFilesToDelete()) > 0) {
+            $this->output->writeln('<error>   Files that will be deleted in next deployment:</error>');
+            foreach ($transfer->getFilesToDelete() as $file_to_delete) {
+                $this->output->writeln('      ' . $file_to_delete);
+            }
+        }
+
+        if (count($transfer->getFilesToUpload()) > 0) {
+            $this->output->writeln('<info>   Files that will be uploaded in next deployment:</info>');
+            foreach ($transfer->getFilesToUpload() as $file_to_upload) {
+                $this->output->writeln('      ' . $file_to_upload);
+            }
+        }
     }
 
     /**
