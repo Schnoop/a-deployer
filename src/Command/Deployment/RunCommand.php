@@ -48,7 +48,7 @@ class RunCommand extends AbstractCommand
     /**
      * Print application banner
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
@@ -94,7 +94,7 @@ class RunCommand extends AbstractCommand
     /**
      * Execute command.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
@@ -119,7 +119,7 @@ class RunCommand extends AbstractCommand
         $connection = $service->getConnection($this->targetConfig);
 
         $compare = new Compare($connection, $this->getGitInstance());
-        $resultSet = $compare->compare($this->getGitInstance()->getLatestRevisionHash());
+        $resultSet = $compare->compare('HEAD');
 
         $filter = new Filter($this->targetConfig->getExcludes());
         $resultSet = $filter->filter($resultSet);
@@ -135,19 +135,19 @@ class RunCommand extends AbstractCommand
             return;
         }
 
-        $deployment = new Deployment($connection);
-        $deployment->run($resultSet);
-
-        echo '<pre>' . print_r($resultSet, 1) . '</pre>';
-        die();
-
-        die();
-        echo 'Go!';
-
         // Last call for action!
         if ($this->reallyProceedWithDeployment() === false) {
             return;
         }
+
+        $deployment = new Deployment($connection, $output);
+        $deployment->run($resultSet);
+
+        $compare->storeRevision($this->getGitInstance()->getLatestRevisionHash());
+
+
+        die();
+
 
     }
 

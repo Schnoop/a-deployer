@@ -31,7 +31,7 @@ class Compare
     /**
      * Compare constructor.
      * @param Filesystem $filesystem
-     * @param Git        $git
+     * @param Git $git
      */
     public function __construct(Filesystem $filesystem, Git $git)
     {
@@ -71,6 +71,11 @@ class Compare
             }
         }
         return $resultSet;
+    }
+
+    public function storeRevision($revision)
+    {
+        $this->filesystem->put($this->revisionFile, $revision);
     }
 
 }
