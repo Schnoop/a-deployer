@@ -37,17 +37,26 @@ class Compare
         $this->git = $git;
     }
 
+    /**
+     * Compare locale with remote revision and return an array with files to upload/delete.
+     *
+     * @param string $localRevision
+     *
+     * @return array
+     */
     public function compare($localRevision)
     {
         $remoteRevision = null;
-        if ($this->filesystem->has($this->revisionFile) === false) {
-            // First deployment. We have to upload the whole project.
-        } else {
+        if ($this->filesystem->has($this->revisionFile) === true) {
             $remoteRevision = $this->filesystem->read($this->revisionFile);
         }
+        $result = $this->git->diff($remoteRevision, $localRevision['sha1']);
 
-        $result = $this->git->getDiff($localRevision['sha1'], $remoteRevision);
+        if ($remoteRevision === null) {
+            return $result;
+        }
 
+        
 
         echo '<pre>' . print_r($result, 1) . '</pre>';
         die();

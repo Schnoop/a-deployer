@@ -135,7 +135,7 @@ trait Command
      */
     protected function getGitDirectory()
     {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->git;
+        return getcwd() . DIRECTORY_SEPARATOR;
     }
 
     /**
