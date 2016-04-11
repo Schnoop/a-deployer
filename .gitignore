@@ -3,3 +3,5 @@ composer.lock
 /vendor
 /build/*.phar
 a-deployer.ini
+.revision
+.a-deployer

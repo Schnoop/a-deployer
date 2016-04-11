@@ -2,6 +2,8 @@
 
 namespace Antwerpes\ADeployer\Service;
 
+use Antwerpes\ADeployer\Model\Transfer;
+use Exception;
 use League\Flysystem\Filesystem;
 
 /**
@@ -42,24 +44,33 @@ class Compare
      *
      * @param string $localRevision
      *
-     * @return array
+     * @return Transfer
+     * @throws Exception
      */
     public function compare($localRevision)
     {
         $remoteRevision = null;
+        $resultSet = new Transfer();
         if ($this->filesystem->has($this->revisionFile) === true) {
             $remoteRevision = $this->filesystem->read($this->revisionFile);
         }
-        $result = $this->git->diff($remoteRevision, $localRevision['sha1']);
+        $result = $this->git->diff($remoteRevision, $localRevision);
 
         if ($remoteRevision === null) {
-            return $result;
+            $resultSet->setFilesToUpload($result);
+            return $resultSet;
         }
 
-        
-
-        echo '<pre>' . print_r($result, 1) . '</pre>';
-        die();
+        foreach ($result as $line) {
+            if ($this->git->fileHasToBeUploaded($line[0])) {
+                $resultSet->addFileToUpload(trim(substr($line, 1)));
+            } elseif ($this->git->fileHasToBeDeleted($line[0])) {
+                $resultSet->addFileToDelete(trim(substr($line, 1)));
+            } else {
+                throw new Exception("Unknown git-diff status.");
+            }
+        }
+        return $resultSet;
     }
 
 }

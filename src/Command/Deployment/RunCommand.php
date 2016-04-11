@@ -118,9 +118,10 @@ class RunCommand extends AbstractCommand
         $connection = $service->getConnection($this->targetConfig);
 
         $compare = new Compare($connection, $this->getGitInstance());
-        $compare->compare($this->getGitInstance()->getLatestRevisionHash());
+        $resultSet = $compare->compare($this->getGitInstance()->getLatestRevisionHash());
+        echo '<pre>' . print_r($resultSet, 1) . '</pre>';
+        die();
 
-        echo '<pre>' . print_r($connection, 1) . '</pre>';
         die();
         echo 'Go!';
 
