@@ -28,8 +28,29 @@ class Deployment
 
     public function run(Transfer $transfer)
     {
-        foreach ($transfer->getFilesToUpload() as $file) {
+        $filesToUpload = $transfer->getFilesToUpload();
+        foreach ($transfer->getFilesToUpload() as $fileNo => $file) {
+            $data = @file_get_contents($file);
+
+            // It can happen the path is wrong, especially with included files.
+            if ($data === false) {
+                $this->cli->error(' ! File not found - please check path: ' . $file);
+                continue;
+            }
+
             $result = $this->filesystem->write($file, file_get_contents($file));
+
+            if (!$result) {
+                $this->cli->error(" ! Failed to upload {$file}.");
+            } else {
+                $this->deploymentSize += filesize($this->repo . '/' . ($this->currentSubmoduleName ? str_replace($this->currentSubmoduleName . '/',
+                        '', $file) : $file));
+            }
+
+            $numberOfFilesToUpdate = count($filesToUpload);
+
+            $fileNo = str_pad(++$fileNo, strlen($numberOfFilesToUpdate), ' ', STR_PAD_LEFT);
+            $this->cli->lightGreen(" ^ $fileNo of $numberOfFilesToUpdate <white>{$file}");
         }
     }
 }
