@@ -3,22 +3,19 @@
 namespace Antwerpes\ADeployer\Model;
 
 /**
- * Class Target
- *
- * @package Antwerpes\ADeployer\Model
+ * Class Target.
  */
 class Target implements \ArrayAccess
 {
-
     /**
-     * Config values
+     * Config values.
      *
      * @var array
      */
     protected $config = [];
 
     /**
-     * Name of target
+     * Name of target.
      *
      * @var string
      */
@@ -26,6 +23,7 @@ class Target implements \ArrayAccess
 
     /**
      * Config constructor.
+     *
      * @param string $name
      * @param array  $config
      */
@@ -36,7 +34,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Returns true if server is configured for critical
+     * Returns true if server is configured for critical.
      *
      * @return bool
      */
@@ -58,7 +56,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Set $value on values array with $offset as key
+     * Set $value on values array with $offset as key.
      *
      * @param string $offset
      * @param string $value
@@ -75,7 +73,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Returns true if offset with key $offset exists
+     * Returns true if offset with key $offset exists.
      *
      * @param string $offset
      *
@@ -87,7 +85,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Unset value with key $offset
+     * Unset value with key $offset.
      *
      * @param mixed $offset
      */
@@ -97,7 +95,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * OffsetGet
+     * OffsetGet.
      *
      * @param string $offset
      *
@@ -120,7 +118,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Returns name of target
+     * Returns name of target.
      *
      * @return string
      */
@@ -130,7 +128,7 @@ class Target implements \ArrayAccess
     }
 
     /**
-     * Returns array with files to exclude
+     * Returns array with files to exclude.
      *
      * @return array
      */
@@ -139,11 +137,12 @@ class Target implements \ArrayAccess
         if (isset($this->config['exclude']) === true) {
             return $this->config['exclude'];
         }
-        return array();
+
+        return [];
     }
 
     /**
-     * Returns array with files to include
+     * Returns array with files to include.
      *
      * @return array
      */
@@ -152,7 +151,7 @@ class Target implements \ArrayAccess
         if (isset($this->config['include']) === true) {
             return $this->config['include'];
         }
-        return array();
-    }
 
+        return [];
+    }
 }

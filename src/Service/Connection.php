@@ -9,21 +9,18 @@ use League\Flysystem\Sftp\SftpAdapter;
 use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
- * Class Connection
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Connection.
  */
 class Connection
 {
-
     /**
      * Get connection.
      *
      * @param Target $config
      *
-     * @return Filesystem
-     *
      * @throws RuntimeException
+     *
+     * @return Filesystem
      */
     public function getConnection(Target $config)
     {
@@ -31,9 +28,9 @@ class Connection
             throw new RuntimeException('No server config found.');
         }
 
-        $method = 'create' . ucfirst(strtolower($config['server']['scheme'])) . 'Connection';
+        $method = 'create'.ucfirst(strtolower($config['server']['scheme'])).'Connection';
         if (method_exists($this, $method) === false) {
-            throw new RuntimeException('Unsupported connection scheme: ' . $config['server']['scheme']);
+            throw new RuntimeException('Unsupported connection scheme: '.$config['server']['scheme']);
         }
 
         $connection = $this->{$method}($config['server']);
@@ -65,5 +62,4 @@ class Connection
     {
         return new Ftp($config);
     }
-
 }

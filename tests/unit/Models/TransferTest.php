@@ -3,11 +3,10 @@
 use Antwerpes\ADeployer\Model\Transfer;
 
 /**
- * Class TransferTest
+ * Class TransferTest.
  */
 class TransferTest extends PHPUnit_Framework_TestCase
 {
-
     public function testAddFileToUpload()
     {
         $transfer = new Transfer();

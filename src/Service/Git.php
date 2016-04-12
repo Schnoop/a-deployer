@@ -5,13 +5,10 @@ namespace Antwerpes\ADeployer\Service;
 use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
- * Class Git
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Git.
  */
 class Git extends \SebastianBergmann\Git\Git
 {
-
     const FILE_CREATED = 'A';
 
     const FILE_COPIED = 'C';
@@ -25,30 +22,33 @@ class Git extends \SebastianBergmann\Git\Git
     /**
      * @var array
      */
-    public $fileHasToBeUploaded = array(
+    public $fileHasToBeUploaded = [
         self::FILE_CREATED,
         self::FILE_COPIED,
         self::FILE_MODIFIED,
-        self::FILE_TYPE_CHANGED
-    );
+        self::FILE_TYPE_CHANGED,
+    ];
 
     /**
-     * Returns sha1 hash from latest revision
+     * Returns sha1 hash from latest revision.
+     *
+     * @throws \Exception
      *
      * @return string
-     * @throws \Exception
      */
     public function getLatestRevisionHash()
     {
         $revision = $this->getLatestRevision();
+
         return $revision['sha1'];
     }
 
     /**
-     * Returns latest revision
+     * Returns latest revision.
+     *
+     * @throws RuntimeException
      *
      * @return array
-     * @throws RuntimeException
      */
     public function getLatestRevision()
     {
@@ -56,11 +56,12 @@ class Git extends \SebastianBergmann\Git\Git
         if (count($revisions) === 0) {
             throw new RuntimeException('No commits found.');
         }
+
         return end($revisions);
     }
 
     /**
-     * Make diff between to git revisions and return output
+     * Make diff between to git revisions and return output.
      *
      * @param string $remoteRevision
      * @param string $localRevision
@@ -72,10 +73,10 @@ class Git extends \SebastianBergmann\Git\Git
         if (empty($remoteRevision)) {
             $command = 'ls-files';
         } elseif ($localRevision === 'HEAD') {
-            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
+            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
         } else {
             // What's the point of this ELSE clause?
-            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
+            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
         }
 
         return $this->execute($command);
@@ -86,7 +87,7 @@ class Git extends \SebastianBergmann\Git\Git
      *
      * @param string $status
      *
-     * @return boolean
+     * @return bool
      */
     public function fileHasToBeUploaded($status)
     {
@@ -94,11 +95,11 @@ class Git extends \SebastianBergmann\Git\Git
     }
 
     /**
-     * Returns true if $status means you have to delete the file
+     * Returns true if $status means you have to delete the file.
      *
      * @param string $status
      *
-     * @return boolean
+     * @return bool
      */
     public function fileHasToBeDeleted($status)
     {

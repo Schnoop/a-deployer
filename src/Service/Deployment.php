@@ -7,9 +7,7 @@ use League\Flysystem\Filesystem;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Deployment
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Deployment.
  */
 class Deployment
 {
@@ -25,6 +23,7 @@ class Deployment
 
     /**
      * Compare constructor.
+     *
      * @param Filesystem      $filesystem
      * @param OutputInterface $output
      */
@@ -35,7 +34,7 @@ class Deployment
     }
 
     /**
-     * Run
+     * Run.
      *
      * @param Transfer $transfer
      */
@@ -48,14 +47,14 @@ class Deployment
 
             // It can happen the path is wrong, especially with included files.
             if ($data === false) {
-                $this->output->writeln('<error> ! File not found - please check path: ' . $file . '</error>');
+                $this->output->writeln('<error> ! File not found - please check path: '.$file.'</error>');
                 continue;
             }
 
             $result = $this->filesystem->put($file, $data);
 
             if ($result === false) {
-                $this->output->writeln('<error> ! Failed to upload ' . $file . '.</error>');
+                $this->output->writeln('<error> ! Failed to upload '.$file.'.</error>');
             }
 
             $fileNo = str_pad(++$fileNo, strlen($numberOfFilesToUpdate), ' ', STR_PAD_LEFT);
@@ -108,14 +107,14 @@ class Deployment
                 $prefix = '';
                 // Add the parent directories to directory name
                 for ($x = 0; $x < $i; ++$x) {
-                    $prefix .= $parts[$x] . '/';
+                    $prefix .= $parts[$x].'/';
                 }
 
-                $part = $prefix . $part;
+                $part = $prefix.$part;
 
                 // If directory doesn't exist, add to files to delete
                 // Relative path won't work consistently, thus getcwd().
-                if (!is_dir(getcwd() . '/' . $part)) {
+                if (!is_dir(getcwd().'/'.$part)) {
                     $dirsToDelete[] = $part;
                 }
             }
