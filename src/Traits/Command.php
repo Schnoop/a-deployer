@@ -19,7 +19,7 @@ trait Command
      *
      * @var string
      */
-    protected $config = 'a-deployer.ini';
+    public $config = 'a-deployer.ini';
 
     /**
      * Config file.
