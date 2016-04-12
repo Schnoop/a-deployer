@@ -20,13 +20,10 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * Class RunCommand
- *
- * @package Antwerpes\ADeployer\Command\Deployment;
+ * Class RunCommand.
  */
 class RunCommand extends AbstractCommand
 {
-
     use CommandTrait;
 
     /**
@@ -45,22 +42,20 @@ class RunCommand extends AbstractCommand
     protected $output;
 
     /**
-     * Print application banner
+     * Print application banner.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return void
      * @throws RuntimeException
+     *
+     * @return void
      */
     public function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
     }
 
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('run')
@@ -81,8 +76,9 @@ class RunCommand extends AbstractCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return void
      * @throws RuntimeException
+     *
+     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -92,7 +88,7 @@ class RunCommand extends AbstractCommand
         // Check for target existance.
         $target = $this->input->getArgument('target');
         if ($this->getConfig()->isAvailableTarget($target) === false) {
-            throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+            throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
         }
 
         // Show basic information about deployment.
@@ -132,6 +128,7 @@ class RunCommand extends AbstractCommand
         // Dry run. Print out and leave.
         if ($input->getOption('dry-run') === true) {
             $this->printDryRun($resultSet);
+
             return;
         }
 
@@ -145,10 +142,7 @@ class RunCommand extends AbstractCommand
 
         $compare->storeRevision($this->getGitInstance()->getLatestRevisionHash());
 
-
         die();
-
-
     }
 
     /**
@@ -169,7 +163,7 @@ class RunCommand extends AbstractCommand
         // Ask user via console.
         $helper = $this->getHelper('question');
         $question = new Question('<info>No password has been provided for user "'
-            . $this->targetConfig['server']['username'] . '". Please enter a password: </info>');
+            .$this->targetConfig['server']['username'].'". Please enter a password: </info>');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 
@@ -177,9 +171,11 @@ class RunCommand extends AbstractCommand
 
         if (strlen($password) === 0) {
             $this->output->writeln('<comment>You entered an empty password. Continuing deployment anyway ...</comment>');
+
             return $password;
         }
         $this->output->writeln('<comment>Password received. Continuing deployment ...</comment>');
+
         return $password;
     }
 
@@ -194,20 +190,21 @@ class RunCommand extends AbstractCommand
     {
         if (count($transfer->getFilesToUpload()) === 0 && count($transfer->getFilesToDelete()) === 0) {
             $this->output->writeln('<info>   No files to upload.</info>');
+
             return;
         }
 
         if (count($transfer->getFilesToDelete()) > 0) {
             $this->output->writeln('<error>   Files that will be deleted in next deployment:</error>');
             foreach ($transfer->getFilesToDelete() as $file_to_delete) {
-                $this->output->writeln('      ' . $file_to_delete);
+                $this->output->writeln('      '.$file_to_delete);
             }
         }
 
         if (count($transfer->getFilesToUpload()) > 0) {
             $this->output->writeln('<info>   Files that will be uploaded in next deployment:</info>');
             foreach ($transfer->getFilesToUpload() as $file_to_upload) {
-                $this->output->writeln('      ' . $file_to_upload);
+                $this->output->writeln('      '.$file_to_upload);
             }
         }
     }
@@ -229,8 +226,10 @@ class RunCommand extends AbstractCommand
                 false,
                 '/^(y|j|yes|ja)/i'
             );
+
             return $helper->ask($this->input, $this->output, $question);
         }
+
         return true;
     }
 }

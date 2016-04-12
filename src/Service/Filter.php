@@ -5,9 +5,7 @@ namespace Antwerpes\ADeployer\Service;
 use Antwerpes\ADeployer\Model\Transfer;
 
 /**
- * Class Filter
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Filter.
  */
 class Filter
 {
@@ -18,6 +16,7 @@ class Filter
 
     /**
      * Filter constructor.
+     *
      * @param array $exclude
      */
     public function __construct(array $exclude)
@@ -44,7 +43,7 @@ class Filter
     }
 
     /**
-     * Filter given $files
+     * Filter given $files.
      *
      * @param array    $files
      * @param Transfer $transfer
@@ -62,19 +61,20 @@ class Filter
                 }
             }
         }
+
         return $files;
     }
 
     /**
-     * Return true if $pattern matches $string
+     * Return true if $pattern matches $string.
      *
      * @param string $pattern
      * @param string $string
      *
-     * @return boolean
+     * @return bool
      */
     protected function patternMatch($pattern, $string)
     {
-        return preg_match('#^' . strtr(preg_quote($pattern, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $string);
+        return preg_match('#^'.strtr(preg_quote($pattern, '#'), ['\*' => '.*', '\?' => '.']).'$#i', $string);
     }
 }

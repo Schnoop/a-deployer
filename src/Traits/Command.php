@@ -10,13 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Command
- *
- * @package Antwerpes\ADeployer\Traits
+ * Class Command.
  */
 trait Command
 {
-
     /**
      * Config file.
      *
@@ -39,7 +36,7 @@ trait Command
     protected $git = '.git';
 
     /**
-     * Print application banner
+     * Print application banner.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -55,8 +52,9 @@ trait Command
     /**
      * Check if configuration file exists and print message.
      *
-     * @return Config
      * @throws \Symfony\Component\Console\Exception\RuntimeException
+     *
+     * @return Config
      */
     protected function getConfig()
     {
@@ -64,39 +62,43 @@ trait Command
     }
 
     /**
-     * Open ini file, parse and return as an array
+     * Open ini file, parse and return as an array.
      *
      * @param string $file
-     * @return array
+     *
      * @throws \Symfony\Component\Console\Exception\RuntimeException
+     *
+     * @return array
      */
     protected function openIniFile($file)
     {
         if (file_exists($file) === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! ' . $file . ' does not exist.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! '.$file.' does not exist.');
         }
         $values = parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException($file . ' is not a valid .ini file.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException($file.' is not a valid .ini file.');
         }
+
         return $values;
     }
 
     /**
-     * Returns full path to config file
+     * Returns full path to config file.
      *
      * @return string
      */
     protected function getFullConfigPath()
     {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->config;
+        return getcwd().DIRECTORY_SEPARATOR.$this->config;
     }
 
     /**
-     * Check for valid git repository
+     * Check for valid git repository.
+     *
+     * @throws \Symfony\Component\Console\Exception\RuntimeException
      *
      * @return Git
-     * @throws \Symfony\Component\Console\Exception\RuntimeException
      */
     protected function getGitInstance()
     {
@@ -104,19 +106,20 @@ trait Command
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
             throw new \Symfony\Component\Console\Exception\RuntimeException(
-                'Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
+                'Whoooops!'.$this->getGitDirectory().' is not a valid git repository . ');
         }
+
         return $repository;
     }
 
     /**
-     * Returns full path to git repository
+     * Returns full path to git repository.
      *
      * @return string
      */
     protected function getGitDirectory()
     {
-        return getcwd() . DIRECTORY_SEPARATOR;
+        return getcwd().DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -147,21 +150,21 @@ trait Command
         $target = $input->getArgument('target');
         $revision = $this->getGitInstance()->getLatestRevision();
         $branch = $this->getGitInstance()->getCurrentBranch();
-        $output->writeln('<info>Will deployment revision </info><comment>"' . $revision['sha1'] . '"</comment><info> from </info><comment>"' .
-            $branch . '"</comment><info> branch to target </info><comment>"' . $target . '"</comment>');
-        $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
-        $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
-        $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
+        $output->writeln('<info>Will deployment revision </info><comment>"'.$revision['sha1'].'"</comment><info> from </info><comment>"'.
+            $branch.'"</comment><info> branch to target </info><comment>"'.$target.'"</comment>');
+        $output->writeln('<info>Revision created from </info><comment>"'.$revision['author'].'"</comment>');
+        $output->writeln('<info>Revision created at </info><comment>"'.$revision['date']->format('d.m.Y H:i:s').'"</comment>');
+        $output->writeln('<info>Revision message </info><comment>"'.$revision['message'].'"</comment>');
         $output->writeln('');
     }
 
     /**
-     * Returns full path to password file
+     * Returns full path to password file.
      *
      * @return string
      */
     protected function getFullPasswordFilePath()
     {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->password;
+        return getcwd().DIRECTORY_SEPARATOR.$this->password;
     }
 }

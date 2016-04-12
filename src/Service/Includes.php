@@ -5,9 +5,7 @@ namespace Antwerpes\ADeployer\Service;
 use Antwerpes\ADeployer\Model\Transfer;
 
 /**
- * Class Includes
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Includes.
  */
 class Includes
 {
@@ -18,6 +16,7 @@ class Includes
 
     /**
      * Filter constructor.
+     *
      * @param array $includes
      */
     public function __construct(array $includes)
@@ -35,6 +34,7 @@ class Includes
     public function add(Transfer $transfer)
     {
         $transfer->addFilesToUpload($this->parseFolder());
+
         return $transfer;
     }
 
@@ -45,7 +45,7 @@ class Includes
     {
         $filteredFiles = [];
         foreach ($this->includes as $i => $file) {
-            $name = getcwd() . DIRECTORY_SEPARATOR . $file;
+            $name = getcwd().DIRECTORY_SEPARATOR.$file;
             if (is_dir($name)) {
                 $filteredFiles = array_merge($filteredFiles,
                     array_map([$this, 'getRelativePath'], $this->directoryToArray($name, true)));
@@ -58,7 +58,7 @@ class Includes
     }
 
     /**
-     * Get an array that represents directory tree
+     * Get an array that represents directory tree.
      *
      * @param string $directory Directory path
      * @param bool   $recursive Include sub directories
@@ -67,7 +67,7 @@ class Includes
      */
     public function directoryToArray($directory, $recursive = true)
     {
-        $arrayItems = array();
+        $arrayItems = [];
         $handle = opendir($directory);
         if (!$handle) {
             return $arrayItems;
@@ -75,20 +75,21 @@ class Includes
         while (false !== ($file = readdir($handle))) {
             preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
             if (!$skip) {
-                if (is_dir($directory . DIRECTORY_SEPARATOR . $file)) {
+                if (is_dir($directory.DIRECTORY_SEPARATOR.$file)) {
                     if ($recursive) {
                         $arrayItems = array_merge($arrayItems,
-                            $this->directoryToArray($directory . DIRECTORY_SEPARATOR . $file, $recursive));
+                            $this->directoryToArray($directory.DIRECTORY_SEPARATOR.$file, $recursive));
                     }
-                    $file = $directory . DIRECTORY_SEPARATOR . $file;
+                    $file = $directory.DIRECTORY_SEPARATOR.$file;
                     $arrayItems[] = $file;
                 } else {
-                    $file = $directory . DIRECTORY_SEPARATOR . $file;
+                    $file = $directory.DIRECTORY_SEPARATOR.$file;
                     $arrayItems[] = $file;
                 }
             }
         }
         closedir($handle);
+
         return $arrayItems;
     }
 
@@ -101,6 +102,6 @@ class Includes
      */
     protected function getRelativePath($el)
     {
-        return str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $el);
+        return str_replace(getcwd().DIRECTORY_SEPARATOR, '', $el);
     }
 }

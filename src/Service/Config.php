@@ -5,15 +5,12 @@ namespace Antwerpes\ADeployer\Service;
 use Antwerpes\ADeployer\Model\Target;
 
 /**
- * Class ConfigFile
- *
- * @package Antwerpes\ADeployer\Service
+ * Class ConfigFile.
  */
 class Config
 {
-
     /**
-     * Array with targets
+     * Array with targets.
      *
      * @var Target[]
      */
@@ -21,6 +18,7 @@ class Config
 
     /**
      * Config constructor.
+     *
      * @param array $config
      */
     public function __construct(array $config)
@@ -31,11 +29,11 @@ class Config
     }
 
     /**
-     * Returns true if $target is known
+     * Returns true if $target is known.
      *
      * @param string $target
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailableTarget($target)
     {
@@ -53,7 +51,7 @@ class Config
     }
 
     /**
-     * Returns config for given $target, of empty array if not found
+     * Returns config for given $target, of empty array if not found.
      *
      * @param string $target
      *
@@ -64,7 +62,5 @@ class Config
         if (isset($this->targets[$target]) === true) {
             return $this->targets[$target];
         }
-        return null;
     }
-
 }

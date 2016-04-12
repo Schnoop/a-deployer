@@ -3,35 +3,33 @@
 namespace Antwerpes\ADeployer\Model;
 
 /**
- * Class Transfer
- *
- * @package Antwerpes\ADeployer\Model
+ * Class Transfer.
  */
 class Transfer
 {
     /**
-     * Array with files to delete
+     * Array with files to delete.
      *
      * @var array
      */
-    protected $delete = array();
+    protected $delete = [];
 
     /**
-     * Array with files to upload
+     * Array with files to upload.
      *
      * @var array
      */
-    protected $upload = array();
+    protected $upload = [];
 
     /**
-     * Array with files to skip while uploading and deleting
+     * Array with files to skip while uploading and deleting.
      *
      * @var array
      */
-    protected $skip = array();
+    protected $skip = [];
 
     /**
-     * Add file to upload array
+     * Add file to upload array.
      *
      * @param string $file
      */
@@ -41,7 +39,7 @@ class Transfer
     }
 
     /**
-     * Add file to delete array
+     * Add file to delete array.
      *
      * @param string $file
      */
@@ -51,7 +49,7 @@ class Transfer
     }
 
     /**
-     * Set files to upload
+     * Set files to upload.
      *
      * @param array $files
      */
@@ -61,7 +59,7 @@ class Transfer
     }
 
     /**
-     * Set files to delete
+     * Set files to delete.
      *
      * @param array $files
      */
@@ -91,7 +89,7 @@ class Transfer
     }
 
     /**
-     * Set files to skip
+     * Set files to skip.
      *
      * @param array $files
      */
@@ -101,7 +99,7 @@ class Transfer
     }
 
     /**
-     * Add $file to skip array
+     * Add $file to skip array.
      *
      * @param string $file
      */
@@ -121,7 +119,7 @@ class Transfer
     }
 
     /**
-     * Add files to upload
+     * Add files to upload.
      *
      * @param array $files
      */
