@@ -24,7 +24,6 @@ use Symfony\Component\Console\Question\Question;
  */
 class RunCommand extends AbstractCommand
 {
-    use CommandTrait;
 
     /**
      * @var Target

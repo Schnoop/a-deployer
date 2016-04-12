@@ -12,8 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListCommand extends AbstractCommand
 {
-    use CommandTrait;
 
+    /**
+     * 
+     */
     protected function configure()
     {
         $this->setName('targets')
