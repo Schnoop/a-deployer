@@ -1,1 +1,2 @@
 [![Build Status](https://travis-ci.org/Schnoop/a-deployer.svg?branch=master)](https://travis-ci.org/Schnoop/a-deployer)
+[![Coverage Status](https://coveralls.io/repos/github/Schnoop/a-deployer/badge.svg?branch=master)](https://coveralls.io/github/Schnoop/a-deployer?branch=master)
