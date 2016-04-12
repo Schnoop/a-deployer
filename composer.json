@@ -1,8 +1,8 @@
 {
   "name": "antwerpes/a-deployer",
-  "description": "A-Deployer - (S)FTP deployment tool",
+  "description": "A-Deployer - (S)FTP deployment tool written with PHP",
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=5.6",
     "league/flysystem": "^1.0",
     "league/flysystem-sftp": "^1.0",
     "symfony/console": "^3.0",
