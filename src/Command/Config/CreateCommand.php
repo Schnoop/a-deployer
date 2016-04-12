@@ -115,7 +115,6 @@ critical = true
      */
     public function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->printApplicationBanner($output);
     }
 
 

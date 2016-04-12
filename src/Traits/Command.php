@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Caommand
+ * Class Command
  *
  * @package Antwerpes\ADeployer\Traits
  */
@@ -48,7 +48,6 @@ trait Command
      */
     public function initialize(InputInterface $input, OutputInterface $output)
     {
-        //$this->printApplicationBanner($output);
         $this->getConfig();
         $this->getGitInstance();
     }
@@ -121,24 +120,6 @@ trait Command
     }
 
     /**
-     * Print application banner.
-     *
-     * @param OutputInterface $output
-     */
-    protected function printApplicationBanner(OutputInterface $output)
-    {
-        $style = new OutputFormatterStyle('white', 'magenta', ['bold']);
-        $output->getFormatter()->setStyle('fire', $style);
-        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
-        $output->writeln('<fire>!                                                     !</>');
-        $output->writeln('<fire>!                   ' . $this->getApplication()->getName()
-            . ' v' . $this->getApplication()->getVersion() . '                   !</>');
-        $output->writeln('<fire>!                                                     !</>');
-        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
-        $output->writeln('');
-    }
-
-    /**
      * Print red banner to tell the user that he has to be careful.
      *
      * @param OutputInterface $output
@@ -158,6 +139,7 @@ trait Command
     /**
      * Print info banner about deployment.
      *
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function printDeploymentBanner(InputInterface $input, OutputInterface $output)

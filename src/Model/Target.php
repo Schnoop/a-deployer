@@ -26,7 +26,8 @@ class Target implements \ArrayAccess
 
     /**
      * Config constructor.
-     * @param array $config
+     * @param string $name
+     * @param array  $config
      */
     public function __construct($name, array $config)
     {
@@ -39,7 +40,7 @@ class Target implements \ArrayAccess
      *
      * @return bool
      */
-    public function isCritialDeployment()
+    public function isCriticalDeployment()
     {
         return isset($this->config['critical']) && $this->config['critical'] == 1;
     }

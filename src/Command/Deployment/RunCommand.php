@@ -100,7 +100,7 @@ class RunCommand extends AbstractCommand
 
         // Show alert message.
         $this->targetConfig = $this->getConfig()->getConfigForTarget($target);
-        if ($this->targetConfig->isCritialDeployment() === true) {
+        if ($this->targetConfig->isCriticalDeployment() === true) {
             $this->printCriticalBanner($this->output);
         }
 
@@ -221,7 +221,7 @@ class RunCommand extends AbstractCommand
     {
         $helper = $this->getHelper('question');
         if (($this->input->getOption('force') === false
-                || $this->targetConfig->isCritialDeployment() === true)
+                || $this->targetConfig->isCriticalDeployment() === true)
             && $this->input->getOption('dry-run') === false
         ) {
             $question = new ConfirmationQuestion(
