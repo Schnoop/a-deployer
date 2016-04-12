@@ -137,7 +137,7 @@ critical = true
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
             // @codeCoverageIgnoreStart
             $output->writeln('<error>Sample '.$this->getConfigFile().' file has not been created.</error>');
-            // @codeCoverageIgnoreStop
+            // @codeCoverageIgnoreEnd
         }
         $output->writeln('<info>Sample '.$this->getConfigFile().' file created.</info>');
     }
