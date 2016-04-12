@@ -111,6 +111,16 @@ class Transfer
     }
 
     /**
+     * Returns array with files to skip.
+     *
+     * @return array
+     */
+    public function getFilesToSkip()
+    {
+        return $this->skip;
+    }
+
+    /**
      * Add files to upload
      *
      * @param array $files
