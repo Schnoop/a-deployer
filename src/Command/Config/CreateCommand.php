@@ -138,7 +138,9 @@ critical = true
             $output->writeln('<error>'.$this->getConfigFile().' already found. Skipping.</error>');
         }
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
+            // @codeCoverageIgnoreStart
             $output->writeln('<error>Sample '.$this->getConfigFile().' file has not been created.</error>');
+            // @codeCoverageIgnoreStop
         }
         $output->writeln('<info>Sample '.$this->getConfigFile().' file created.</info>');
     }

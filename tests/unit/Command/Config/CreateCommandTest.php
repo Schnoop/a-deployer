@@ -26,7 +26,8 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/Sample ' . $commandInstance->getConfigFile() . ' file created./', $commandTester->getDisplay());
+        $this->assertRegExp('/Sample ' . $commandInstance->getConfigFile() . ' file created./',
+            $commandTester->getDisplay());
 
         $this->assertTrue(file_exists($demoFile));
 
