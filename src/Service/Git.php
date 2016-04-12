@@ -2,6 +2,8 @@
 
 namespace Antwerpes\ADeployer\Service;
 
+use Symfony\Component\Console\Exception\RuntimeException;
+
 /**
  * Class Git
  *
@@ -46,13 +48,13 @@ class Git extends \SebastianBergmann\Git\Git
      * Returns latest revision
      *
      * @return array
-     * @throws \Exception
+     * @throws RuntimeException
      */
     public function getLatestRevision()
     {
         $revisions = $this->getRevisions();
         if (count($revisions) === 0) {
-            throw new \Exception('No commits found.');
+            throw new RuntimeException('No commits found.');
         }
         return end($revisions);
     }

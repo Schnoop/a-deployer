@@ -45,10 +45,10 @@ class Includes
     {
         $filteredFiles = [];
         foreach ($this->includes as $i => $file) {
-            $name = getcwd() . '/' . $file;
+            $name = getcwd() . DIRECTORY_SEPARATOR . $file;
             if (is_dir($name)) {
                 $filteredFiles = array_merge($filteredFiles,
-                    array_map([$this, 'relPath'], $this->directoryToArray($name, true)));
+                    array_map([$this, 'getRelativePath'], $this->directoryToArray($name, true)));
             } else {
                 $filteredFiles[] = $file;
             }
@@ -59,63 +59,48 @@ class Includes
 
     /**
      * Get an array that represents directory tree
-     * Credit: http://php.net/manual/en/function.scandir.php#109140.
      *
      * @param string $directory Directory path
      * @param bool   $recursive Include sub directories
-     * @param bool   $listDirs Include directories on listing
-     * @param bool   $listFiles Include files on listing
-     * @param string $exclude Exclude paths that matches this regex
      *
      * @return array
      */
-    public function directoryToArray($directory, $recursive = true, $listDirs = false, $listFiles = true, $exclude = '')
+    public function directoryToArray($directory, $recursive = true)
     {
         $arrayItems = array();
-        $skipByExclude = false;
         $handle = opendir($directory);
-        if ($handle) {
-            while (false !== ($file = readdir($handle))) {
-                preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
-                if ($exclude) {
-                    preg_match($exclude, $file, $skipByExclude);
-                }
-                if (!$skip && !$skipByExclude) {
-                    if (is_dir($directory . DIRECTORY_SEPARATOR . $file)) {
-                        if ($recursive) {
-                            $arrayItems = array_merge($arrayItems,
-                                $this->directoryToArray($directory . DIRECTORY_SEPARATOR . $file, $recursive, $listDirs,
-                                    $listFiles, $exclude));
-                        }
-                        if ($listDirs) {
-                            $file = $directory . DIRECTORY_SEPARATOR . $file;
-                            $arrayItems[] = $file;
-                        }
-                    } else {
-                        if ($listFiles) {
-                            $file = $directory . DIRECTORY_SEPARATOR . $file;
-                            $arrayItems[] = $file;
-                        }
+        if (!$handle) {
+            return $arrayItems;
+        }
+        while (false !== ($file = readdir($handle))) {
+            preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
+            if (!$skip) {
+                if (is_dir($directory . DIRECTORY_SEPARATOR . $file)) {
+                    if ($recursive) {
+                        $arrayItems = array_merge($arrayItems,
+                            $this->directoryToArray($directory . DIRECTORY_SEPARATOR . $file, $recursive));
                     }
+                    $file = $directory . DIRECTORY_SEPARATOR . $file;
+                    $arrayItems[] = $file;
+                } else {
+                    $file = $directory . DIRECTORY_SEPARATOR . $file;
+                    $arrayItems[] = $file;
                 }
             }
-            closedir($handle);
         }
-
+        closedir($handle);
         return $arrayItems;
     }
 
     /**
-     * Strip Absolute Path.
+     * Remove absolute path from $el.
      *
      * @param string $el
      *
      * @return string
      */
-    protected function relPath($el)
+    protected function getRelativePath($el)
     {
-        $abs = getcwd() . '/';
-
-        return str_replace($abs, '', $el);
+        return str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $el);
     }
 }

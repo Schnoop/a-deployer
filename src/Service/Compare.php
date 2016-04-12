@@ -3,8 +3,8 @@
 namespace Antwerpes\ADeployer\Service;
 
 use Antwerpes\ADeployer\Model\Transfer;
-use Exception;
 use League\Flysystem\Filesystem;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
  * Class Compare
@@ -31,7 +31,7 @@ class Compare
     /**
      * Compare constructor.
      * @param Filesystem $filesystem
-     * @param Git $git
+     * @param Git        $git
      */
     public function __construct(Filesystem $filesystem, Git $git)
     {
@@ -45,7 +45,7 @@ class Compare
      * @param string $localRevision
      *
      * @return Transfer
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function compare($localRevision)
     {
@@ -67,12 +67,17 @@ class Compare
             } elseif ($this->git->fileHasToBeDeleted($line[0])) {
                 $resultSet->addFileToDelete(trim(substr($line, 1)));
             } else {
-                throw new Exception("Unknown git-diff status.");
+                throw new RuntimeException("Unknown git-diff status.");
             }
         }
         return $resultSet;
     }
 
+    /**
+     * Store $revision is revision file on server
+     *
+     * @param string $revision
+     */
     public function storeRevision($revision)
     {
         $this->filesystem->put($this->revisionFile, $revision);

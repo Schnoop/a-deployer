@@ -3,10 +3,10 @@
 namespace Antwerpes\ADeployer\Service;
 
 use Antwerpes\ADeployer\Model\Target;
-use Exception;
 use League\Flysystem\Adapter\Ftp;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Sftp\SftpAdapter;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
  * Class Connection
@@ -23,17 +23,17 @@ class Connection
      *
      * @return Filesystem
      *
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function getConnection(Target $config)
     {
         if (isset($config['server']) === false) {
-            throw new Exception('No server config found.');
+            throw new RuntimeException('No server config found.');
         }
 
         $method = 'create' . ucfirst(strtolower($config['server']['scheme'])) . 'Connection';
         if (method_exists($this, $method) === false) {
-            throw new Exception('Unsupported connection scheme: ' . $config['server']['scheme']);
+            throw new RuntimeException('Unsupported connection scheme: ' . $config['server']['scheme']);
         }
 
         $connection = $this->{$method}($config['server']);

@@ -38,12 +38,12 @@ class ListCommand extends AbstractCommand
     {
         $config = $this->getConfig();
 
-        $output->writeln('<info>Known deployment targets:</info>');
+        $output->writeln('<info>Valid deployment targets:</info>');
         $output->writeln('');
-        foreach (array_keys($config) as $target) {
+        foreach ($config->getAvailableTargets() as $target) {
             $output->writeln('<comment>- ' . $target . '</comment>');
         }
         $output->writeln('');
-        $output->writeln('<info>To start a deployment run "(php) bin/a-deployer run --target <target>"</info>');
+        $output->writeln('<info>To start a deployment run "(php) bin/a-deployer run <target>"</info>');
     }
 }

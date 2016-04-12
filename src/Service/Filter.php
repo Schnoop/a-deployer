@@ -35,30 +35,34 @@ class Filter
     public function filter(Transfer $transfer)
     {
         $filesToDelete = $transfer->getFilesToDelete();
-        foreach ($filesToDelete as $i => $file) {
-            foreach ($this->exclude as $pattern) {
-                if ($this->patternMatch($pattern, $file) === true) {
-                    unset($filesToDelete[$i]);
-                    $transfer->addFileToSkip($file);
-                    break;
-                }
-            }
-        }
-        $transfer->setFilesToDelete($filesToDelete);
+        $transfer->setFilesToDelete($this->useFilter($filesToDelete, $transfer));
 
         $filesToUpload = $transfer->getFilesToUpload();
-        foreach ($filesToUpload as $i => $file) {
+        $transfer->setFilesToUpload($this->useFilter($filesToUpload, $transfer));
+
+        return $transfer;
+    }
+
+    /**
+     * Filter given $files
+     *
+     * @param array    $files
+     * @param Transfer $transfer
+     *
+     * @return array
+     */
+    private function useFilter($files, Transfer $transfer)
+    {
+        foreach ($files as $i => $file) {
             foreach ($this->exclude as $pattern) {
                 if ($this->patternMatch($pattern, $file) === 1) {
-                    unset($filesToUpload[$i]);
+                    unset($files[$i]);
                     $transfer->addFileToSkip($file);
                     break;
                 }
             }
         }
-        $transfer->setFilesToUpload($filesToUpload);
-
-        return $transfer;
+        return $files;
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Antwerpes\ADeployer\Traits;
 
 use Antwerpes\ADeployer\Service\Config;
 use Antwerpes\ADeployer\Service\Git;
-use Exception;
 use SebastianBergmann\Git\RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,34 +48,16 @@ trait Command
      */
     public function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->printApplicationBanner($output);
+        //$this->printApplicationBanner($output);
         $this->getConfig();
         $this->getGitInstance();
-    }
-
-    /**
-     * Print application banner.
-     *
-     * @param OutputInterface $output
-     */
-    protected function printApplicationBanner(OutputInterface $output)
-    {
-        $style = new OutputFormatterStyle('white', 'magenta', ['bold']);
-        $output->getFormatter()->setStyle('fire', $style);
-        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
-        $output->writeln('<fire>!                                                     !</>');
-        $output->writeln('<fire>!                   ' . $this->getApplication()->getName()
-            . ' v' . $this->getApplication()->getVersion() . '                   !</>');
-        $output->writeln('<fire>!                                                     !</>');
-        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
-        $output->writeln('');
     }
 
     /**
      * Check if configuration file exists and print message.
      *
      * @return Config
-     * @throws Exception
+     * @throws \Symfony\Component\Console\Exception\RuntimeException
      */
     protected function getConfig()
     {
@@ -88,16 +69,16 @@ trait Command
      *
      * @param string $file
      * @return array
-     * @throws Exception
+     * @throws \Symfony\Component\Console\Exception\RuntimeException
      */
     protected function openIniFile($file)
     {
         if (file_exists($file) === false) {
-            throw new Exception('Whoooops! ' . $file . ' does not exist.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! ' . $file . ' does not exist.');
         }
         $values = parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Exception($file . ' is not a valid .ini file.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException($file . ' is not a valid .ini file.');
         }
         return $values;
     }
@@ -116,14 +97,15 @@ trait Command
      * Check for valid git repository
      *
      * @return Git
-     * @throws Exception
+     * @throws \Symfony\Component\Console\Exception\RuntimeException
      */
     protected function getGitInstance()
     {
         try {
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
-            throw new Exception('Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
+            throw new \Symfony\Component\Console\Exception\RuntimeException(
+                'Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
         }
         return $repository;
     }
@@ -136,6 +118,24 @@ trait Command
     protected function getGitDirectory()
     {
         return getcwd() . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Print application banner.
+     *
+     * @param OutputInterface $output
+     */
+    protected function printApplicationBanner(OutputInterface $output)
+    {
+        $style = new OutputFormatterStyle('white', 'magenta', ['bold']);
+        $output->getFormatter()->setStyle('fire', $style);
+        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
+        $output->writeln('<fire>!                                                     !</>');
+        $output->writeln('<fire>!                   ' . $this->getApplication()->getName()
+            . ' v' . $this->getApplication()->getVersion() . '                   !</>');
+        $output->writeln('<fire>!                                                     !</>');
+        $output->writeln('<fire>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</>');
+        $output->writeln('');
     }
 
     /**

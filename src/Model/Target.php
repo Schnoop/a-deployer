@@ -56,6 +56,14 @@ class Target implements \ArrayAccess
         $this->config['server']['password'] = $password;
     }
 
+    /**
+     * Set $value on values array with $offset as key
+     *
+     * @param string $offset
+     * @param string $value
+     *
+     * @return void
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -65,16 +73,35 @@ class Target implements \ArrayAccess
         }
     }
 
+    /**
+     * Returns true if offset with key $offset exists
+     *
+     * @param string $offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->config[$offset]);
     }
 
+    /**
+     * Unset value with key $offset
+     *
+     * @param mixed $offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->config[$offset]);
     }
 
+    /**
+     * OffsetGet
+     *
+     * @param string $offset
+     *
+     * @return mixed|null
+     */
     public function offsetGet($offset)
     {
         return isset($this->config[$offset]) ? $this->config[$offset] : null;
@@ -87,7 +114,8 @@ class Target implements \ArrayAccess
      */
     public function hasPassword()
     {
-        return isset($this->config['server']['password']) === true || isset($this->config['server']['privateKey']) === true;
+        return isset($this->config['server']['password']) === true
+        || isset($this->config['server']['privateKey']) === true;
     }
 
     /**

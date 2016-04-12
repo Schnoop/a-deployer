@@ -25,56 +25,13 @@ class Deployment
 
     /**
      * Compare constructor.
-     * @param Filesystem $filesystem
+     * @param Filesystem      $filesystem
      * @param OutputInterface $output
      */
     public function __construct(Filesystem $filesystem, OutputInterface $output)
     {
         $this->filesystem = $filesystem;
         $this->output = $output;
-    }
-
-    /**
-     * Checks for deleted directories. Git cares only about files.
-     *
-     * @param array $filesToDelete
-     *
-     * @return array
-     */
-    public function hasDeletedDirectories($filesToDelete)
-    {
-        $dirsToDelete = [];
-        foreach ($filesToDelete as $file) {
-
-            // Break directories into a list of items
-            $parts = explode('/', $file);
-            // Remove files name from the list
-            array_pop($parts);
-
-            foreach ($parts as $i => $part) {
-                $prefix = '';
-                // Add the parent directories to directory name
-                for ($x = 0; $x < $i; ++$x) {
-                    $prefix .= $parts[$x] . '/';
-                }
-
-                $part = $prefix . $part;
-
-                // If directory doesn't exist, add to files to delete
-                // Relative path won't work consistently, thus getcwd().
-                if (!is_dir(getcwd() . '/' . $part)) {
-                    $dirsToDelete[] = $part;
-                }
-            }
-        }
-
-        // Remove duplicates
-        $dirsToDeleteUnique = array_unique($dirsToDelete);
-
-        // Reverse order to delete inner children before parents
-        $dirsToDeleteOrder = array_reverse($dirsToDeleteUnique);
-
-        return $dirsToDeleteOrder;
     }
 
     /**
@@ -119,16 +76,57 @@ class Deployment
 
         $dirsToDelete = $this->hasDeletedDirectories($filesToDelete);
         $numberOfDirsToDelete = count($dirsToDelete);
-        if (count($dirsToDelete) > 0) {
-            foreach ($dirsToDelete as $dirNo => $dir) {
-                $dirNo = str_pad(++$dirNo, strlen($numberOfDirsToDelete), ' ', STR_PAD_LEFT);
-                if ($this->filesystem->has($dir) === false) {
-                    $this->output->writeln("<error> ! $dirNo of $numberOfDirsToDelete</error> {$dir} not found");
-                    continue;
+        foreach ($dirsToDelete as $dirNo => $dir) {
+            $dirNo = str_pad(++$dirNo, strlen($numberOfDirsToDelete), ' ', STR_PAD_LEFT);
+            if ($this->filesystem->has($dir) === false) {
+                $this->output->writeln("<error> ! $dirNo of $numberOfDirsToDelete</error> {$dir} not found");
+                continue;
+            }
+            $this->filesystem->deleteDir($dir);
+            $this->output->writeln("<error> × $dirNo of $numberOfDirsToDelete</error> {$dir}");
+        }
+    }
+
+    /**
+     * Checks for deleted directories. Git cares only about files.
+     *
+     * @param array $filesToDelete
+     *
+     * @return array
+     */
+    public function hasDeletedDirectories($filesToDelete)
+    {
+        $dirsToDelete = [];
+        foreach ($filesToDelete as $file) {
+
+            // Break directories into a list of items
+            $parts = explode('/', $file);
+            // Remove files name from the list
+            array_pop($parts);
+
+            foreach ($parts as $i => $part) {
+                $prefix = '';
+                // Add the parent directories to directory name
+                for ($x = 0; $x < $i; ++$x) {
+                    $prefix .= $parts[$x] . '/';
                 }
-                $this->filesystem->deleteDir($dir);
-                $this->output->writeln("<error> × $dirNo of $numberOfDirsToDelete</error> {$dir}");
+
+                $part = $prefix . $part;
+
+                // If directory doesn't exist, add to files to delete
+                // Relative path won't work consistently, thus getcwd().
+                if (!is_dir(getcwd() . '/' . $part)) {
+                    $dirsToDelete[] = $part;
+                }
             }
         }
+
+        // Remove duplicates
+        $dirsToDeleteUnique = array_unique($dirsToDelete);
+
+        // Reverse order to delete inner children before parents
+        $dirsToDeleteOrder = array_reverse($dirsToDeleteUnique);
+
+        return $dirsToDeleteOrder;
     }
 }

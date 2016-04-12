@@ -11,8 +11,7 @@ use Antwerpes\ADeployer\Service\Deployment;
 use Antwerpes\ADeployer\Service\Filter;
 use Antwerpes\ADeployer\Service\Includes;
 use Antwerpes\ADeployer\Traits\Command as CommandTrait;
-use Exception;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -48,30 +47,15 @@ class RunCommand extends AbstractCommand
     /**
      * Print application banner
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
-
-        // Check for target existance.
-        $target = $input->getArgument('target');
-        if ($this->getConfig()->isAvailableTarget($target) === false) {
-            throw new Exception($target . ' is not a known deployment target.');
-        }
-
-        // Show basic information about deployment.
-        $this->printDeploymentBanner($input, $output);
-
-        // Show alert message.
-        $this->targetConfig = $this->getConfig()->getConfigForTarget($target);
-        if ($this->targetConfig->isCritialDeployment() === true) {
-            $this->printCriticalBanner($output);
-        }
     }
 
     /**
@@ -94,16 +78,31 @@ class RunCommand extends AbstractCommand
     /**
      * Execute command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
-     * @throws Exception
+     * @throws RuntimeException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
+
+        // Check for target existance.
+        $target = $this->input->getArgument('target');
+        if ($this->getConfig()->isAvailableTarget($target) === false) {
+            throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+        }
+
+        // Show basic information about deployment.
+        $this->printDeploymentBanner($this->input, $this->output);
+
+        // Show alert message.
+        $this->targetConfig = $this->getConfig()->getConfigForTarget($target);
+        if ($this->targetConfig->isCritialDeployment() === true) {
+            $this->printCriticalBanner($this->output);
+        }
 
         // Dry run. Nothing will happen.
         if ($input->getOption('dry-run') === true) {
@@ -124,6 +123,7 @@ class RunCommand extends AbstractCommand
         $filter = new Filter($this->targetConfig->getExcludes());
         $resultSet = $filter->filter($resultSet);
 
+        // Use includes if option is not false
         if ($input->getOption('no-includes') === false) {
             $includes = new Includes($this->targetConfig->getIncludes());
             $resultSet = $includes->add($resultSet);
