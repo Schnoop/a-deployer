@@ -10,7 +10,6 @@ use Antwerpes\ADeployer\Service\Connection;
 use Antwerpes\ADeployer\Service\Deployment;
 use Antwerpes\ADeployer\Service\Filter;
 use Antwerpes\ADeployer\Service\Includes;
-use Antwerpes\ADeployer\Traits\Command as CommandTrait;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +23,6 @@ use Symfony\Component\Console\Question\Question;
  */
 class RunCommand extends AbstractCommand
 {
-
     /**
      * @var Target
      */

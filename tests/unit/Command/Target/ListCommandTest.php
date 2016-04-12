@@ -2,17 +2,13 @@
 
 
 /**
- * Class ListCommandTest
+ * Class ListCommandTest.
  */
 class ListCommandTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     *
-     */
     public function testConfigFileNotCreate()
     {
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }
@@ -25,18 +21,18 @@ class ListCommandTest extends PHPUnit_Framework_TestCase
 
         $command = $application->find('targets');
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
-        $commandTester->execute(array('command' => $command->getName()));
+        $commandTester->execute(['command' => $command->getName()]);
 
-        $this->assertEquals("Valid deployment targets:
+        $this->assertEquals('Valid deployment targets:
 
 - foo
 - bar
 
-To start a deployment run \"(php) bin/a-deployer run <target>\"
-",
+To start a deployment run "(php) bin/a-deployer run <target>"
+',
             $commandTester->getDisplay());
 
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }

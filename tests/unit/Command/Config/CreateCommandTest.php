@@ -2,17 +2,13 @@
 
 
 /**
- * Class TestCreateCommand
+ * Class TestCreateCommand.
  */
 class CreateCommandTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     *
-     */
     public function testConfigFileCreate()
     {
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }
@@ -24,27 +20,28 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
 
         $command = $application->find('init');
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
-        $commandTester->execute(array('command' => $command->getName()));
+        $commandTester->execute(['command' => $command->getName()]);
 
+<<<<<<< HEAD
         $this->assertRegExp('/Sample ' . $commandInstance->getConfigFile() . ' file created./',
             $commandTester->getDisplay());
+=======
+        $this->assertRegExp('/Sample '.$commandInstance->getConfigFile().' file created./', $commandTester->getDisplay());
+>>>>>>> a1e0a413be2999cdb1fa93b9922909b67a0a8f58
 
         $this->assertTrue(file_exists($demoFile));
 
         $this->assertEquals($commandInstance->data, file_get_contents($demoFile));
 
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }
     }
 
-    /**
-     *
-     */
     public function testConfigFileNotCreate()
     {
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }
@@ -57,12 +54,12 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
 
         $command = $application->find('init');
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
-        $commandTester->execute(array('command' => $command->getName()));
+        $commandTester->execute(['command' => $command->getName()]);
 
-        $this->assertRegExp('/' . $commandInstance->getConfigFile() . ' already found. Skipping./',
+        $this->assertRegExp('/'.$commandInstance->getConfigFile().' already found. Skipping./',
             $commandTester->getDisplay());
 
-        $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
+        $demoFile = getcwd().DIRECTORY_SEPARATOR.'phpunit-config.ini';
         if (file_exists($demoFile)) {
             unlink($demoFile);
         }
