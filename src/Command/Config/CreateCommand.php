@@ -115,13 +115,10 @@ critical = true
         // Empty. Only overritten to disabled check.
     }
 
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('init')
-            ->setDescription('Create a sample ' . $this->getConfigFile() . ' file.');
+            ->setDescription('Create a sample '.$this->getConfigFile().' file.');
     }
 
     /**
@@ -134,7 +131,7 @@ critical = true
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (file_exists($this->getFullConfigPath()) === true)  {
+        if (file_exists($this->getFullConfigPath()) === true) {
             $output->writeln('<error>'.$this->getConfigFile().' already found. Skipping.</error>');
         }
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
