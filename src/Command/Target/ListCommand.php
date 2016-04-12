@@ -8,18 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ListCommand
- *
- * @package Antwerpes\ADeployer\Command\Support;
+ * Class ListCommand.
  */
 class ListCommand extends AbstractCommand
 {
-
     use CommandTrait;
 
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('targets')
@@ -29,7 +23,7 @@ class ListCommand extends AbstractCommand
     /**
      * Execute command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -41,7 +35,7 @@ class ListCommand extends AbstractCommand
         $output->writeln('<info>Valid deployment targets:</info>');
         $output->writeln('');
         foreach ($config->getAvailableTargets() as $target) {
-            $output->writeln('<comment>- ' . $target . '</comment>');
+            $output->writeln('<comment>- '.$target.'</comment>');
         }
         $output->writeln('');
         $output->writeln('<info>To start a deployment run "(php) bin/a-deployer run <target>"</info>');

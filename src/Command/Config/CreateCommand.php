@@ -7,17 +7,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class CreateCommand
- *
- * @package Antwerpes\ADeployer\Command
+ * Class CreateCommand.
  */
 class CreateCommand extends AbstractCommand
 {
-
     /**
      * @var string
      */
-    protected $data = "; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.
+    protected $data = '; NOTE: If non-alphanumeric characters are present, enclose in value in quotes.
 
 [production]
 ; FTP
@@ -103,12 +100,12 @@ server[directoryPerm] = 0755
 ; It is NOT possible to bypass this via the --force flag. Default: false
 critical = true
 
-";
+';
 
     /**
-     * Print application banner
+     * Print application banner.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -117,10 +114,6 @@ critical = true
     {
     }
 
-
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('init')
@@ -130,7 +123,7 @@ critical = true
     /**
      * Execute command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -138,8 +131,8 @@ critical = true
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
-            $output->writeln('<error>Sample ' . $this->config . ' file has not been created.</error>');
+            $output->writeln('<error>Sample '.$this->config.' file has not been created.</error>');
         }
-        $output->writeln('<info>Sample ' . $this->config . ' file created.</info>');
+        $output->writeln('<info>Sample '.$this->config.' file created.</info>');
     }
 }

@@ -7,9 +7,7 @@ use League\Flysystem\Filesystem;
 use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
- * Class Compare
- *
- * @package Antwerpes\ADeployer\Service
+ * Class Compare.
  */
 class Compare
 {
@@ -30,6 +28,7 @@ class Compare
 
     /**
      * Compare constructor.
+     *
      * @param Filesystem $filesystem
      * @param Git        $git
      */
@@ -44,8 +43,9 @@ class Compare
      *
      * @param string $localRevision
      *
-     * @return Transfer
      * @throws RuntimeException
+     *
+     * @return Transfer
      */
     public function compare($localRevision)
     {
@@ -58,6 +58,7 @@ class Compare
 
         if ($remoteRevision === null) {
             $resultSet->setFilesToUpload($result);
+
             return $resultSet;
         }
 
@@ -67,14 +68,15 @@ class Compare
             } elseif ($this->git->fileHasToBeDeleted($line[0])) {
                 $resultSet->addFileToDelete(trim(substr($line, 1)));
             } else {
-                throw new RuntimeException("Unknown git-diff status.");
+                throw new RuntimeException('Unknown git-diff status.');
             }
         }
+
         return $resultSet;
     }
 
     /**
-     * Store $revision is revision file on server
+     * Store $revision is revision file on server.
      *
      * @param string $revision
      */
@@ -82,5 +84,4 @@ class Compare
     {
         $this->filesystem->put($this->revisionFile, $revision);
     }
-
 }
