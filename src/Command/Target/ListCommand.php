@@ -3,7 +3,6 @@
 namespace Antwerpes\ADeployer\Command\Target;
 
 use Antwerpes\ADeployer\Command\AbstractCommand;
-use Antwerpes\ADeployer\Traits\Command as CommandTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,10 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListCommand extends AbstractCommand
 {
-
-    /**
-     * 
-     */
     protected function configure()
     {
         $this->setName('targets')
