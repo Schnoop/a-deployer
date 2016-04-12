@@ -38,7 +38,7 @@ trait Command
     /**
      * Print application banner.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
@@ -73,11 +73,11 @@ trait Command
     protected function openIniFile($file)
     {
         if (file_exists($file) === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! '.$file.' does not exist.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! ' . $file . ' does not exist.');
         }
         $values = parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException($file.' is not a valid .ini file.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException($file . ' is not a valid .ini file.');
         }
 
         return $values;
@@ -90,7 +90,7 @@ trait Command
      */
     protected function getFullConfigPath()
     {
-        return getcwd().DIRECTORY_SEPARATOR.$this->configFile;
+        return getcwd() . DIRECTORY_SEPARATOR . $this->configFile;
     }
 
     /**
@@ -106,7 +106,7 @@ trait Command
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
             throw new \Symfony\Component\Console\Exception\RuntimeException(
-                'Whoooops!'.$this->getGitDirectory().' is not a valid git repository . ');
+                'Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
         }
 
         return $repository;
@@ -119,7 +119,7 @@ trait Command
      */
     protected function getGitDirectory()
     {
-        return getcwd().DIRECTORY_SEPARATOR;
+        return getcwd() . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -142,7 +142,7 @@ trait Command
     /**
      * Print info banner about deployment.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function printDeploymentBanner(InputInterface $input, OutputInterface $output)
@@ -150,11 +150,11 @@ trait Command
         $target = $input->getArgument('target');
         $revision = $this->getGitInstance()->getLatestRevision();
         $branch = $this->getGitInstance()->getCurrentBranch();
-        $output->writeln('<info>Will deployment revision </info><comment>"'.$revision['sha1'].'"</comment><info> from </info><comment>"'.
-            $branch.'"</comment><info> branch to target </info><comment>"'.$target.'"</comment>');
-        $output->writeln('<info>Revision created from </info><comment>"'.$revision['author'].'"</comment>');
-        $output->writeln('<info>Revision created at </info><comment>"'.$revision['date']->format('d.m.Y H:i:s').'"</comment>');
-        $output->writeln('<info>Revision message </info><comment>"'.$revision['message'].'"</comment>');
+        $output->writeln('<info>Will deployment revision </info><comment>"' . $revision['sha1'] . '"</comment><info> from </info><comment>"' .
+            $branch . '"</comment><info> branch to target </info><comment>"' . $target . '"</comment>');
+        $output->writeln('<info>Revision created from </info><comment>"' . $revision['author'] . '"</comment>');
+        $output->writeln('<info>Revision created at </info><comment>"' . $revision['date']->format('d.m.Y H:i:s') . '"</comment>');
+        $output->writeln('<info>Revision message </info><comment>"' . $revision['message'] . '"</comment>');
         $output->writeln('');
     }
 
@@ -165,6 +165,26 @@ trait Command
      */
     protected function getFullPasswordFilePath()
     {
-        return getcwd().DIRECTORY_SEPARATOR.$this->password;
+        return getcwd() . DIRECTORY_SEPARATOR . $this->password;
+    }
+
+    /**
+     * Returns name of config file
+     *
+     * @return string
+     */
+    public function getConfigFile()
+    {
+        return $this->configFile;
+    }
+
+    /**
+     * Set name of config file
+     *
+     * @param string $config
+     */
+    public function setConfigFile($config)
+    {
+        $this->configFile = $config;
     }
 }
