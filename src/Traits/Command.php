@@ -19,7 +19,7 @@ trait Command
      *
      * @var string
      */
-    public $config = 'a-deployer.ini';
+    public $configFile = 'a-deployer.ini';
 
     /**
      * Config file.
@@ -90,7 +90,7 @@ trait Command
      */
     protected function getFullConfigPath()
     {
-        return getcwd().DIRECTORY_SEPARATOR.$this->config;
+        return getcwd().DIRECTORY_SEPARATOR.$this->configFile;
     }
 
     /**

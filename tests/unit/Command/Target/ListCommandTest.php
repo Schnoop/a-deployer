@@ -20,7 +20,7 @@ class ListCommandTest extends PHPUnit_Framework_TestCase
 
         $application = new \Symfony\Component\Console\Application();
         $commandInstance = new \Antwerpes\ADeployer\Command\Target\ListCommand();
-        $commandInstance->config = 'phpunit-config.ini';
+        $commandInstance->configFile = 'phpunit-config.ini';
         $application->add($commandInstance);
 
         $command = $application->find('targets');

@@ -121,7 +121,7 @@ critical = true
     protected function configure()
     {
         $this->setName('init')
-            ->setDescription('Create a sample ' . $this->config . ' file.');
+            ->setDescription('Create a sample ' . $this->configFile . ' file.');
     }
 
     /**
@@ -135,11 +135,11 @@ critical = true
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (file_exists($this->getFullConfigPath()) === true)  {
-            $output->writeln('<error>'.$this->config.' already found. Skipping.</error>');
+            $output->writeln('<error>'.$this->configFile.' already found. Skipping.</error>');
         }
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
-            $output->writeln('<error>Sample '.$this->config.' file has not been created.</error>');
+            $output->writeln('<error>Sample '.$this->configFile.' file has not been created.</error>');
         }
-        $output->writeln('<info>Sample '.$this->config.' file created.</info>');
+        $output->writeln('<info>Sample '.$this->configFile.' file created.</info>');
     }
 }

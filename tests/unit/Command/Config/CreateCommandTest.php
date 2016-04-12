@@ -19,14 +19,14 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
 
         $application = new \Symfony\Component\Console\Application();
         $commandInstance = new \Antwerpes\ADeployer\Command\Config\CreateCommand();
-        $commandInstance->config = 'phpunit-config.ini';
+        $commandInstance->configFile = 'phpunit-config.ini';
         $application->add($commandInstance);
 
         $command = $application->find('init');
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/Sample ' . $commandInstance->config . ' file created./', $commandTester->getDisplay());
+        $this->assertRegExp('/Sample ' . $commandInstance->configFile . ' file created./', $commandTester->getDisplay());
 
         $this->assertTrue(file_exists($demoFile));
 
@@ -58,7 +58,7 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/' . $commandInstance->config . ' already found. Skipping./',
+        $this->assertRegExp('/' . $commandInstance->configFile . ' already found. Skipping./',
             $commandTester->getDisplay());
 
         $demoFile = getcwd() . DIRECTORY_SEPARATOR . 'phpunit-config.ini';
