@@ -51,7 +51,7 @@ class CreateCommandTest extends PHPUnit_Framework_TestCase
 
         $application = new \Symfony\Component\Console\Application();
         $commandInstance = new \Antwerpes\ADeployer\Command\Config\CreateCommand();
-        $commandInstance->config = 'phpunit-config.ini';
+        $commandInstance->setConfigFile('phpunit-config.ini');
         $application->add($commandInstance);
 
         $command = $application->find('init');
