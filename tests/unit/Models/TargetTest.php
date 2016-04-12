@@ -112,4 +112,19 @@ class TargetTest extends PHPUnit_Framework_TestCase
         $target = new Target('demo', $config);
         $this->assertEquals($includes, $target->getIncludes());
     }
+
+    public function testName()
+    {
+        $config = [];
+        $target = new Target('demo', $config);
+        $this->assertEquals('demo', $target->getName());
+    }
+
+    public function testSetPassword()
+    {
+        $config = [];
+        $target = new Target('demo', $config);
+        $target->setPassword('fooBar');
+        $this->assertEquals('fooBar', $target['server']['password']);
+    }
 }

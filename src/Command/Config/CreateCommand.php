@@ -138,7 +138,7 @@ critical = true
             // @codeCoverageIgnoreStart
             $output->writeln('<error>Sample '.$this->getConfigFile().' file has not been created.</error>');
             // @codeCoverageIgnoreEnd
-        }
+        } // @codeCoverageIgnore
         $output->writeln('<info>Sample '.$this->getConfigFile().' file created.</info>');
     }
 }

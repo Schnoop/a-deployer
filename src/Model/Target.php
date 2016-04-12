@@ -58,6 +58,8 @@ class Target implements \ArrayAccess
     /**
      * Set $value on values array with $offset as key.
      *
+     * @codeCoverageIgnore
+     *
      * @param string $offset
      * @param string $value
      *
@@ -75,6 +77,8 @@ class Target implements \ArrayAccess
     /**
      * Returns true if offset with key $offset exists.
      *
+     * @codeCoverageIgnore
+     *
      * @param string $offset
      *
      * @return bool
@@ -87,6 +91,8 @@ class Target implements \ArrayAccess
     /**
      * Unset value with key $offset.
      *
+     * @codeCoverageIgnore
+     *
      * @param mixed $offset
      */
     public function offsetUnset($offset)
@@ -96,6 +102,8 @@ class Target implements \ArrayAccess
 
     /**
      * OffsetGet.
+     *
+     * @codeCoverageIgnore
      *
      * @param string $offset
      *
