@@ -1,6 +1,6 @@
 {
   "name": "antwerpes/a-deployer",
-  "description": "A-Deployer - (S)FTP deployment tool written with PHP using Git to find out what to deploy.",
+  "description": "A-Deployer - (S)FTP deployment tool written in PHP using Git to find out what to deploy.",
   "keywords": [
     "deployment",
     "deploy",
