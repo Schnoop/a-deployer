@@ -42,7 +42,7 @@ class Target implements \ArrayAccess
      */
     public function isCriticalDeployment()
     {
-        return isset($this->config['critical']) && $this->config['critical'] == 1;
+        return isset($this->config['critical']) && intval($this->config['critical']) === 1;
     }
 
     /**

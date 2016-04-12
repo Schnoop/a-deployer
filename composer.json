@@ -19,5 +19,8 @@
       "name": "Thorsten Daners",
       "email": "thorsten.daners@antwerpes.de"
     }
-  ]
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^5.3"
+  }
 }
