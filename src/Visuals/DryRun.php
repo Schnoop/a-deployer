@@ -10,11 +10,10 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class DryRun
+ * Class DryRun.
  */
 class DryRun
 {
-
     /**
      * @param OutputInterface $output
      * @param Transfer        $transfer
@@ -38,7 +37,7 @@ class DryRun
             $tableRows[] = [new TableCell($file)];
         }
 
-        $tableCells[] = [new TableCell('SERVER: </info>' . $target->getName())];
+        $tableCells[] = [new TableCell('SERVER: </info>'.$target->getName())];
         $tableCells[] = [new TableCell('<comment>Dry run: No remote files will be modified.</comment>')];
         if ($transfer->hasRemoteRevision() === false) {
             $tableCells[] = [new TableCell('<comment>No revision found - uploading everything...</comment>')];
@@ -66,23 +65,23 @@ class DryRun
         $bytes = floatval($bytes);
         $arBytes = [
             0 => [
-                'UNIT' => 'TB',
+                'UNIT'  => 'TB',
                 'VALUE' => pow(1024, 4),
             ],
             1 => [
-                'UNIT' => 'GB',
+                'UNIT'  => 'GB',
                 'VALUE' => pow(1024, 3),
             ],
             2 => [
-                'UNIT' => 'MB',
+                'UNIT'  => 'MB',
                 'VALUE' => pow(1024, 2),
             ],
             3 => [
-                'UNIT' => 'KB',
+                'UNIT'  => 'KB',
                 'VALUE' => 1024,
             ],
             4 => [
-                'UNIT' => 'B',
+                'UNIT'  => 'B',
                 'VALUE' => 1,
             ],
         ];
@@ -90,12 +89,11 @@ class DryRun
         foreach ($arBytes as $arItem) {
             if ($bytes >= $arItem['VALUE']) {
                 $result = $bytes / $arItem['VALUE'];
-                $result = str_replace('.', ',', strval(round($result, 2))) . ' ' . $arItem['UNIT'];
+                $result = str_replace('.', ',', strval(round($result, 2))).' '.$arItem['UNIT'];
                 break;
             }
         }
 
         return $result;
     }
-
 }
