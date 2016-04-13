@@ -20,8 +20,8 @@ class Excludes
      * Filter ignore files.
      *
      * @param Transfer $transfer
-     * @param array $exclude
-     * 
+     * @param array    $exclude
+     *
      * @return Transfer
      */
     public function filter(Transfer $transfer, array $exclude)

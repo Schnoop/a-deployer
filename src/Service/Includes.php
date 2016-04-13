@@ -9,12 +9,11 @@ use Antwerpes\ADeployer\Model\Transfer;
  */
 class Includes
 {
-
     /**
      * Filter ignore files.
      *
      * @param Transfer $transfer
-     * @param array $includes
+     * @param array    $includes
      *
      * @return Transfer
      */
@@ -26,7 +25,7 @@ class Includes
     }
 
     /**
-     * Parse folder
+     * Parse folder.
      *
      * @param array $includes
      *
