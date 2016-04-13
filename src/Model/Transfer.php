@@ -156,5 +156,4 @@ class Transfer
     {
         $this->remoteRevision = $remoteRevision;
     }
-
 }
