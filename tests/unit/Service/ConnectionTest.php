@@ -34,5 +34,4 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         $connection = new \Antwerpes\ADeployer\Service\Connection();
         $this->assertInstanceOf('\League\Flysystem\Adapter\Ftp', $connection->createFtpConnection([]));
     }
-
 }
