@@ -5,10 +5,6 @@
  */
 class FilterTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     *
-     */
     public function testFilter()
     {
         $filter = new \Antwerpes\ADeployer\Service\Filter(['fooBar']);
@@ -23,5 +19,4 @@ class FilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([0 => 'barBar', 2 => 'fooFoo'], $result->getFilesToDelete());
         $this->assertEquals(['fooBar', 'fooBar'], $result->getFilesToSkip());
     }
-
 }
