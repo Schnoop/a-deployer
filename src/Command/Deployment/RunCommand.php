@@ -201,11 +201,11 @@ class RunCommand extends AbstractCommand
         }
 
         $tableCells = [
-            [new TableCell('SERVER: </info>' . $target, ['colspan' => 3])],
+            [new TableCell('SERVER: </info>'.$target, ['colspan' => 3])],
         ];
         if ($transfer->hasRemoteRevision() === false) {
             $tableCells[] = [
-                new TableCell('<comment>No revision found - uploading everything...</comment>', ['colspan' => 3])
+                new TableCell('<comment>No revision found - uploading everything...</comment>', ['colspan' => 3]),
             ];
         }
         $tableCells[] = ['File', 'Size', 'Action'];
@@ -219,7 +219,7 @@ class RunCommand extends AbstractCommand
     /**
      * Convert $bytes in human readable size.
      *
-     * @param integer $bytes
+     * @param int $bytes
      *
      * @return string
      */
@@ -229,34 +229,35 @@ class RunCommand extends AbstractCommand
         $bytes = floatval($bytes);
         $arBytes = [
             0 => [
-                "UNIT" => "TB",
-                "VALUE" => pow(1024, 4)
+                'UNIT'  => 'TB',
+                'VALUE' => pow(1024, 4),
             ],
             1 => [
-                "UNIT" => "GB",
-                "VALUE" => pow(1024, 3)
+                'UNIT'  => 'GB',
+                'VALUE' => pow(1024, 3),
             ],
             2 => [
-                "UNIT" => "MB",
-                "VALUE" => pow(1024, 2)
+                'UNIT'  => 'MB',
+                'VALUE' => pow(1024, 2),
             ],
             3 => [
-                "UNIT" => "KB",
-                "VALUE" => 1024
+                'UNIT'  => 'KB',
+                'VALUE' => 1024,
             ],
             4 => [
-                "UNIT" => "B",
-                "VALUE" => 1
+                'UNIT'  => 'B',
+                'VALUE' => 1,
             ],
         ];
 
         foreach ($arBytes as $arItem) {
-            if ($bytes >= $arItem["VALUE"]) {
-                $result = $bytes / $arItem["VALUE"];
-                $result = str_replace(".", ",", strval(round($result, 2))) . " " . $arItem["UNIT"];
+            if ($bytes >= $arItem['VALUE']) {
+                $result = $bytes / $arItem['VALUE'];
+                $result = str_replace('.', ',', strval(round($result, 2))).' '.$arItem['UNIT'];
                 break;
             }
         }
+
         return $result;
     }
 
