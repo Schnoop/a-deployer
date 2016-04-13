@@ -50,8 +50,8 @@ class IncludesTest extends PHPUnit_Framework_TestCase
         ];
 
         $transfer = new \Antwerpes\ADeployer\Model\Transfer();
-        $includes = new \Antwerpes\ADeployer\Service\Includes(['tests/demo-folder']);
-        $transfer = $includes->add($transfer);
+        $includes = new \Antwerpes\ADeployer\Service\Includes();
+        $transfer = $includes->add($transfer, ['tests/demo-folder']);
         $this->assertEquals($foldersProof, $transfer->getFilesToUpload());
     }
 }

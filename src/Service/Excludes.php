@@ -17,24 +17,17 @@ class Excludes
     private $exclude = ['.git*'];
 
     /**
-     * Filter constructor.
-     *
-     * @param array $exclude
-     */
-    public function __construct(array $exclude)
-    {
-        $this->exclude = array_merge($this->exclude, $exclude);
-    }
-
-    /**
      * Filter ignore files.
      *
      * @param Transfer $transfer
-     *
+     * @param array $exclude
+     * 
      * @return Transfer
      */
-    public function filter(Transfer $transfer)
+    public function filter(Transfer $transfer, array $exclude)
     {
+        $this->exclude = array_merge($this->exclude, $exclude);
+
         $filesToDelete = $transfer->getFilesToDelete();
         $transfer->setFilesToDelete($this->useFilter($filesToDelete, $transfer));
 

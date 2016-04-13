@@ -47,7 +47,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\League\Flysystem\Adapter\Ftp', $connection->createFtpConnection([]));
     }
 
-
+/*
     public function testGetConnectionForFtp()
     {
         if (defined('FTP_BINARY') === false) {
@@ -60,5 +60,5 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         $target = new \Antwerpes\ADeployer\Model\Target('demo', ['server' => ['scheme' => 'ftp']]);
         $connection = new \Antwerpes\ADeployer\Service\Connection();
         $connection->getConnection($target);
-    }
+    } */
 }

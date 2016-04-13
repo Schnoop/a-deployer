@@ -23,15 +23,53 @@ use Symfony\Component\Console\Question\Question;
  */
 class RunCommand extends AbstractCommand
 {
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var Compare
+     */
+    protected $compare;
+
+    /**
+     * @var Excludes
+     */
+    protected $excludes;
+
+    /**
+     * @var Includes
+     */
+    protected $includes;
+
     /**
      * @var Target
      */
     protected $targetConfig;
 
     /**
+     * RunCommand constructor.
+     *
+     * @param Connection $connection
+     * @param Compare $compare
+     * @param Excludes $excludes
+     * @param Includes $includes
+     */
+    public function __construct(Connection $connection, Compare $compare, Excludes $excludes, Includes $includes)
+    {
+        parent::__construct('run');
+        $this->connection = $connection;
+        $this->compare = $compare;
+        $this->excludes = $excludes;
+        $this->includes = $includes;
+    }
+
+    /**
      * Print application banner.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @throws RuntimeException
@@ -43,6 +81,9 @@ class RunCommand extends AbstractCommand
         parent::initialize($input, $output);
     }
 
+    /**
+     * 
+     */
     protected function configure()
     {
         $this->setName('run')
@@ -57,7 +98,7 @@ class RunCommand extends AbstractCommand
     /**
      * Execute command.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @throws RuntimeException
@@ -72,7 +113,7 @@ class RunCommand extends AbstractCommand
         // If a target has been chosen.
         if (strlen($target) > 0) {
             if ($this->getConfig()->isAvailableTarget($target) === false) {
-                throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+                throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
             }
             $this->deploy($this->getConfig()->getConfigForTarget($target));
 
@@ -99,19 +140,14 @@ class RunCommand extends AbstractCommand
             $target->setPassword($this->getPassword());
         }
 
-        $service = new Connection();
-        $filesystem = $service->getConnection($target);
+        $filesystem = $this->connection->getConnection($target);
+        $resultSet = $this->compare->compare('HEAD', $filesystem, $this->getGitInstance());
 
-        $compare = new Compare($filesystem, $this->getGitInstance(), $this->output);
-        $resultSet = $compare->compare('HEAD');
-
-        $excludes = new Excludes($target->getExcludes());
-        $resultSet = $excludes->filter($resultSet);
+        $resultSet = $this->excludes->filter($resultSet, $target->getExcludes());
 
         // Use includes if option is not false
         if ($this->input->getOption('no-includes') === false) {
-            $includes = new Includes($target->getIncludes());
-            $resultSet = $includes->add($resultSet);
+            $resultSet = $this->includes->add($resultSet, $target->getIncludes());
         }
 
         // Dry run. Print out and leave.
@@ -130,7 +166,7 @@ class RunCommand extends AbstractCommand
         $deployment = new Deployment($filesystem, $this->output);
         $deployment->run($resultSet);
 
-        $compare->storeRevision($this->getGitInstance()->getLatestRevisionHash());
+        $this->compare->storeRevision($this->getGitInstance()->getLatestRevisionHash());
 
         die();
     }
@@ -153,7 +189,7 @@ class RunCommand extends AbstractCommand
         // Ask user via console.
         $helper = $this->getHelper('question');
         $question = new Question('<info>No password has been provided for user "'
-            .$this->targetConfig['server']['username'].'". Please enter a password: </info>');
+            . $this->targetConfig['server']['username'] . '". Please enter a password: </info>');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 

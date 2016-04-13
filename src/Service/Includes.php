@@ -9,42 +9,33 @@ use Antwerpes\ADeployer\Model\Transfer;
  */
 class Includes
 {
-    /**
-     * @var array
-     */
-    private $includes;
-
-    /**
-     * Filter constructor.
-     *
-     * @param array $includes
-     */
-    public function __construct(array $includes)
-    {
-        $this->includes = $includes;
-    }
 
     /**
      * Filter ignore files.
      *
      * @param Transfer $transfer
+     * @param array $includes
      *
      * @return Transfer
      */
-    public function add(Transfer $transfer)
+    public function add(Transfer $transfer, array $includes)
     {
-        $transfer->addFilesToUpload($this->parseFolder());
+        $transfer->addFilesToUpload($this->parseFolder($includes));
 
         return $transfer;
     }
 
     /**
+     * Parse folder
+     *
+     * @param array $includes
+     *
      * @return array
      */
-    private function parseFolder()
+    private function parseFolder($includes)
     {
         $filteredFiles = [];
-        foreach ($this->includes as $i => $file) {
+        foreach ($includes as $i => $file) {
             $name = getcwd().DIRECTORY_SEPARATOR.$file;
             if (is_dir($name)) {
                 $filteredFiles = array_merge($filteredFiles,

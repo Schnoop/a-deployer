@@ -16,7 +16,8 @@
     "league/flysystem": "^1.0",
     "league/flysystem-sftp": "^1.0",
     "symfony/console": "^3.0",
-    "sebastian/git": "^2.1"
+    "sebastian/git": "^2.1",
+    "pimple/pimple": "^3.0"
   },
   "autoload": {
     "psr-4": {

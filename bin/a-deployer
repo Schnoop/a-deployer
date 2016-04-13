@@ -3,6 +3,29 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use Pimple\Container;
+
+$container = new Container();
+$container['service.connection'] = function ($c) {
+    return new \Antwerpes\ADeployer\Service\Connection();
+};
+$container['service.compare'] = function ($c) {
+    return new \Antwerpes\ADeployer\Service\Compare();
+};
+$container['service.excludes'] = function ($c) {
+    return new \Antwerpes\ADeployer\Service\Excludes();
+};
+$container['service.includes'] = function ($c) {
+    return new \Antwerpes\ADeployer\Service\Includes();
+};
+$container['command.deployment.run'] = function ($c) {
+    return new \Antwerpes\ADeployer\Command\Deployment\RunCommand(
+        $c['service.connection'],
+        $c['service.compare'],
+        $c['service.excludes'],
+        $c['service.includes']);
+};
+
 use Symfony\Component\Console\Application;
 
 $command = new \Antwerpes\ADeployer\Command\Support\ListCommand();
@@ -10,7 +33,7 @@ $command = new \Antwerpes\ADeployer\Command\Support\ListCommand();
 $application = new Application('A-Deployer', '1.0');
 $application->add(new \Antwerpes\ADeployer\Command\Config\CreateCommand());
 $application->add(new \Antwerpes\ADeployer\Command\Target\ListCommand());
-$application->add(new \Antwerpes\ADeployer\Command\Deployment\RunCommand());
+$application->add($container['command.deployment.run']);
 $application->add($command);
 $application->setDefaultCommand($command->getName());
 $application->run();
