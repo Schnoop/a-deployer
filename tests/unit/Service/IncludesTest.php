@@ -5,10 +5,6 @@
  */
 class IncludesTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     *
-     */
     public function testFilter()
     {
         $folders = [
@@ -47,5 +43,4 @@ class IncludesTest extends PHPUnit_Framework_TestCase
         $transfer = $includes->add($transfer);
         $this->assertEquals($foldersProof, $transfer->getFilesToUpload());
     }
-
 }
