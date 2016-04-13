@@ -5,3 +5,4 @@ composer.lock
 a-deployer.ini
 .revision
 .a-deployer
+tests/demo-folder

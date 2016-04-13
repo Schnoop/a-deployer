@@ -65,7 +65,7 @@ class Includes
      *
      * @return array
      */
-    public function directoryToArray($directory, $recursive = true)
+    protected function directoryToArray($directory, $recursive = true)
     {
         $arrayItems = [];
         $handle = opendir($directory);
