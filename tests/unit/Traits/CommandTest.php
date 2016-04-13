@@ -2,13 +2,11 @@
 
 
 /**
- * Class CommandTraitStub
+ * Class CommandTraitStub.
  */
 class CommandTraitStub
 {
-
     use \Antwerpes\ADeployer\Traits\Command;
-
 }
 
 /**
@@ -16,7 +14,6 @@ class CommandTraitStub
  */
 class CommandTest extends PHPUnit_Framework_TestCase
 {
-
     public function testConfigFile()
     {
         $instance = new CommandTraitStub();
@@ -34,10 +31,10 @@ class CommandTest extends PHPUnit_Framework_TestCase
         $file = 'fooBar.ini';
         $instance->setConfigFile($file);
 
-        @unlink(getcwd() . DIRECTORY_SEPARATOR . $file);
+        @unlink(getcwd().DIRECTORY_SEPARATOR.$file);
 
         $this->expectException('\Symfony\Component\Console\Exception\RuntimeException');
-        $this->expectExceptionMessage('Whoooops! ' . getcwd() . DIRECTORY_SEPARATOR . $file . ' does not exist.');
+        $this->expectExceptionMessage('Whoooops! '.getcwd().DIRECTORY_SEPARATOR.$file.' does not exist.');
 
         $instance->initialize($inputMock, $outputMock);
     }
@@ -51,10 +48,10 @@ class CommandTest extends PHPUnit_Framework_TestCase
         $file = 'fooBar.ini';
         $instance->setConfigFile($file);
 
-        file_put_contents(getcwd() . DIRECTORY_SEPARATOR . $file, '%&');
+        file_put_contents(getcwd().DIRECTORY_SEPARATOR.$file, '%&');
 
         $this->expectException('\Symfony\Component\Console\Exception\RuntimeException');
-        $this->expectExceptionMessage(getcwd() . DIRECTORY_SEPARATOR . $file . ' is not a valid .ini file.');
+        $this->expectExceptionMessage(getcwd().DIRECTORY_SEPARATOR.$file.' is not a valid .ini file.');
 
         $instance->initialize($inputMock, $outputMock);
     }
