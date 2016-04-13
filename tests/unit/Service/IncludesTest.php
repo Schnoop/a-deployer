@@ -9,9 +9,6 @@ class IncludesTest extends PHPUnit_Framework_TestCase
     {
         $files = [
             'tests/demo-folder/demo2/fooBar.txt',
-            'tests/demo-folder/fooBar.txt',
-            'tests/demo-folder/demo1/demo1.1/demo1.1.1/fooBar.txt',
-            'tests/demo-folder/demo1/barFoo.txt',
         ];
         foreach ($files as $file) {
             @unlink($file);
@@ -47,11 +44,8 @@ class IncludesTest extends PHPUnit_Framework_TestCase
             'tests/demo-folder/demo2',
             'tests/demo-folder/demo3',
             'tests/demo-folder/demo4',
-            'tests/demo-folder/fooBar.txt',
-            'tests/demo-folder/demo1/demo1.1/demo1.1.1/fooBar.txt',
             'tests/demo-folder/demo1/demo1.1/demo1.1.1',
             'tests/demo-folder/demo1/demo1.1',
-            'tests/demo-folder/demo1/barFoo.txt',
             'tests/demo-folder/demo1',
         ];
 
