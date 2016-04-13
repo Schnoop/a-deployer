@@ -16,7 +16,7 @@ class CreateCommand extends AbstractCommand
      */
     public $data = '; NOTE: If non-alphanumeric characters in use, enclose value in quotes.
 
-[production]
+[staging]
 ; FTP
 server[scheme] = ftp
 
@@ -32,8 +32,8 @@ server[username] = foo
 ; Password
 server[password] = bar
 
-; Use SSL or not
-server[ssl] = sftp
+; Use SSL or not. Default: false
+server[ssl] = false
 
 ; Set the amount of seconds before the connection should timeout. Default: 90
 server[timeout] = 90
@@ -61,7 +61,7 @@ server[systemType] = unix
 ; It is NOT possible to bypass this via the --force flag. Default: false
 critical = true
 
-[production-2]
+[production]
 ; SFTP
 server[scheme] = sftp
 
@@ -133,6 +133,7 @@ critical = true
     {
         if (file_exists($this->getFullConfigPath()) === true) {
             $output->writeln('<error>'.$this->getConfigFile().' already found. Skipping.</error>');
+            return;
         }
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
             // @codeCoverageIgnoreStart

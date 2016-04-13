@@ -5,14 +5,16 @@ namespace Antwerpes\ADeployer\Service;
 use Antwerpes\ADeployer\Model\Transfer;
 
 /**
- * Class Filter.
+ * Class Excludes.
  */
-class Filter
+class Excludes
 {
     /**
+     * Default set to ignore.
+     *
      * @var array
      */
-    private $exclude;
+    private $exclude = ['.git*'];
 
     /**
      * Filter constructor.
@@ -21,7 +23,7 @@ class Filter
      */
     public function __construct(array $exclude)
     {
-        $this->exclude = $exclude;
+        $this->exclude = array_merge($this->exclude, $exclude);
     }
 
     /**

@@ -36,6 +36,16 @@ trait Command
     protected $git = '.git';
 
     /**
+     * @var InputInterface
+     */
+    protected $input;
+
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
+
+    /**
      * Print application banner.
      *
      * @param InputInterface  $input
@@ -47,6 +57,12 @@ trait Command
     {
         $this->getConfig();
         $this->getGitInstance();
+
+        $this->input = $input;
+        $this->output = $output;
+
+        $style = new OutputFormatterStyle('black', 'yellow', array('bold', 'blink'));
+        $output->getFormatter()->setStyle('notification', $style);
     }
 
     /**
@@ -73,11 +89,11 @@ trait Command
     protected function openIniFile($file)
     {
         if (file_exists($file) === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! '.$file.' does not exist.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! ' . $file . ' does not exist.');
         }
         $values = @parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException($file.' is not a valid .ini file.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException($file . ' is not a valid .ini file.');
         }
 
         return $values;
@@ -90,7 +106,7 @@ trait Command
      */
     protected function getFullConfigPath()
     {
-        return getcwd().DIRECTORY_SEPARATOR.$this->configFile;
+        return getcwd() . DIRECTORY_SEPARATOR . $this->configFile;
     }
 
     /**
@@ -106,7 +122,7 @@ trait Command
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
             throw new \Symfony\Component\Console\Exception\RuntimeException(
-                'Whoooops!'.$this->getGitDirectory().' is not a valid git repository . ');
+                'Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
         }
 
         return $repository;
@@ -119,7 +135,45 @@ trait Command
      */
     protected function getGitDirectory()
     {
-        return getcwd().DIRECTORY_SEPARATOR;
+        return getcwd() . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Returns name of config file.
+     *
+     * @return string
+     */
+    public function getConfigFile()
+    {
+        return $this->configFile;
+    }
+
+    /**
+     * Set name of config file.
+     *
+     * @param string $config
+     */
+    public function setConfigFile($config)
+    {
+        $this->configFile = $config;
+    }
+
+    /**
+     * Print $message as block
+     *
+     * @param array           $message
+     * @param string          $style
+     * @param bool            $padded
+     *
+     * @return void
+     */
+    protected function printBlock($message, $style = 'notification', $padded = true)
+    {
+        $formatter = $this->getHelper('formatter');
+        $formattedBlock = $formatter->formatBlock($message, $style, $padded);
+        $this->output->writeln('');
+        $this->output->writeln($formattedBlock);
+        $this->output->writeln('');
     }
 
     /**
@@ -146,26 +200,6 @@ trait Command
      */
     protected function getFullPasswordFilePath()
     {
-        return getcwd().DIRECTORY_SEPARATOR.$this->password;
-    }
-
-    /**
-     * Returns name of config file.
-     *
-     * @return string
-     */
-    public function getConfigFile()
-    {
-        return $this->configFile;
-    }
-
-    /**
-     * Set name of config file.
-     *
-     * @param string $config
-     */
-    public function setConfigFile($config)
-    {
-        $this->configFile = $config;
+        return getcwd() . DIRECTORY_SEPARATOR . $this->password;
     }
 }

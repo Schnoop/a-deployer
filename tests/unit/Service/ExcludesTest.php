@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Class FilterTest.
+ * Class ExcludesTest.
  */
-class FilterTest extends PHPUnit_Framework_TestCase
+class ExcludesTest extends PHPUnit_Framework_TestCase
 {
-    public function testFilter()
+    public function testExcludes()
     {
-        $filter = new \Antwerpes\ADeployer\Service\Filter(['fooBar']);
+        $filter = new \Antwerpes\ADeployer\Service\Excludes(['fooBar']);
 
         $transfer = new \Antwerpes\ADeployer\Model\Transfer();
         $transfer->setFilesToUpload(['fooBar', 'barFoo']);
