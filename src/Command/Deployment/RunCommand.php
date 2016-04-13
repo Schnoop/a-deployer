@@ -46,9 +46,6 @@ class RunCommand extends AbstractCommand
         parent::initialize($input, $output);
     }
 
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('run')
@@ -83,9 +80,10 @@ class RunCommand extends AbstractCommand
         // If a target has been chosen.
         if (strlen($target) > 0) {
             if ($this->getConfig()->isAvailableTarget($target) === false) {
-                throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+                throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
             }
             $this->deploy($this->getConfig()->getConfigForTarget($target));
+
             return;
         }
 
@@ -96,7 +94,7 @@ class RunCommand extends AbstractCommand
     }
 
     /**
-     * Run deployment
+     * Run deployment.
      *
      * @param Target $target
      *
@@ -104,8 +102,6 @@ class RunCommand extends AbstractCommand
      */
     protected function deploy(Target $target)
     {
-        //$this->output->writeln('<info>SERVER:</info> ' . $target->getName());
-
         // No password found in ini file.
         if ($target->hasPassword() === false) {
             $target->setPassword($this->getPassword());
@@ -164,7 +160,7 @@ class RunCommand extends AbstractCommand
         // Ask user via console.
         $helper = $this->getHelper('question');
         $question = new Question('<info>No password has been provided for user "'
-            . $this->targetConfig['server']['username'] . '". Please enter a password: </info>');
+            .$this->targetConfig['server']['username'].'". Please enter a password: </info>');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 
@@ -195,6 +191,10 @@ class RunCommand extends AbstractCommand
         }
         if (count($transfer->getFilesToDelete()) > 0) {
             $tableRows[] = new TableSeparator();
+            $this->output->writeln('<error>   Files that will be deleted in next deployment:</error>');
+            foreach ($transfer->getFilesToDelete() as $file_to_delete) {
+                $this->output->writeln('      '.$file_to_delete);
+            }
         }
         foreach ($transfer->getFilesToDelete() as $file) {
             $tableRows[] = [$file, $this->fileSizeConvert(filesize($file)), '<error>Delete</error>'];

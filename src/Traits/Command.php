@@ -89,11 +89,11 @@ trait Command
     protected function openIniFile($file)
     {
         if (file_exists($file) === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! ' . $file . ' does not exist.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! '.$file.' does not exist.');
         }
         $values = @parse_ini_file($file, true);
         if ($values === false) {
-            throw new \Symfony\Component\Console\Exception\RuntimeException($file . ' is not a valid .ini file.');
+            throw new \Symfony\Component\Console\Exception\RuntimeException($file.' is not a valid .ini file.');
         }
 
         return $values;
@@ -106,7 +106,7 @@ trait Command
      */
     protected function getFullConfigPath()
     {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->configFile;
+        return getcwd().DIRECTORY_SEPARATOR.$this->configFile;
     }
 
     /**
@@ -122,7 +122,7 @@ trait Command
             $repository = new Git($this->getGitDirectory());
         } catch (RuntimeException $e) {
             throw new \Symfony\Component\Console\Exception\RuntimeException(
-                'Whoooops!' . $this->getGitDirectory() . ' is not a valid git repository . ');
+                'Whoooops!'.$this->getGitDirectory().' is not a valid git repository . ');
         }
 
         return $repository;
@@ -135,7 +135,7 @@ trait Command
      */
     protected function getGitDirectory()
     {
-        return getcwd() . DIRECTORY_SEPARATOR;
+        return getcwd().DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -159,11 +159,11 @@ trait Command
     }
 
     /**
-     * Print $message as block
+     * Print $message as block.
      *
-     * @param array           $message
-     * @param string          $style
-     * @param bool            $padded
+     * @param array  $message
+     * @param string $style
+     * @param bool   $padded
      *
      * @return void
      */
@@ -200,6 +200,6 @@ trait Command
      */
     protected function getFullPasswordFilePath()
     {
-        return getcwd() . DIRECTORY_SEPARATOR . $this->password;
+        return getcwd().DIRECTORY_SEPARATOR.$this->password;
     }
 }

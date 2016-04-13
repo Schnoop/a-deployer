@@ -133,6 +133,7 @@ critical = true
     {
         if (file_exists($this->getFullConfigPath()) === true) {
             $output->writeln('<error>'.$this->getConfigFile().' already found. Skipping.</error>');
+
             return;
         }
         if (file_put_contents($this->getFullConfigPath(), $this->data) === false) {
