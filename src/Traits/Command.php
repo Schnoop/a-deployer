@@ -61,7 +61,7 @@ trait Command
         $this->input = $input;
         $this->output = $output;
 
-        $style = new OutputFormatterStyle('black', 'yellow', array('bold', 'blink'));
+        $style = new OutputFormatterStyle('black', 'yellow', ['bold', 'blink']);
         $output->getFormatter()->setStyle('notification', $style);
     }
 

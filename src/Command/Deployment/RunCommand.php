@@ -11,7 +11,9 @@ use Antwerpes\ADeployer\Service\Deployment;
 use Antwerpes\ADeployer\Service\Excludes;
 use Antwerpes\ADeployer\Service\Includes;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,6 +75,11 @@ class RunCommand extends AbstractCommand
         // Get target from input.
         $target = $this->input->getArgument('target');
 
+        // Dry run. Print out and leave.
+        if ($this->input->getOption('dry-run') === true) {
+            $this->printBlock(['Dry run!', 'No remote files will be modified.']);
+        }
+
         // If a target has been chosen.
         if (strlen($target) > 0) {
             if ($this->getConfig()->isAvailableTarget($target) === false) {
@@ -97,8 +104,7 @@ class RunCommand extends AbstractCommand
      */
     protected function deploy(Target $target)
     {
-        $this->output->writeln('');
-        $this->output->writeln('<info>SERVER:</info> ' . $target->getName());
+        //$this->output->writeln('<info>SERVER:</info> ' . $target->getName());
 
         // No password found in ini file.
         if ($target->hasPassword() === false) {
@@ -108,7 +114,7 @@ class RunCommand extends AbstractCommand
         $service = new Connection();
         $filesystem = $service->getConnection($target);
 
-        $compare = new Compare($filesystem, $this->getGitInstance());
+        $compare = new Compare($filesystem, $this->getGitInstance(), $this->output);
         $resultSet = $compare->compare('HEAD');
 
         $excludes = new Excludes($target->getExcludes());
@@ -122,7 +128,7 @@ class RunCommand extends AbstractCommand
 
         // Dry run. Print out and leave.
         if ($this->input->getOption('dry-run') === true) {
-            $this->printDryRun($resultSet);
+            $this->printDryRun($resultSet, $target->getName());
 
             return;
         }
@@ -178,32 +184,80 @@ class RunCommand extends AbstractCommand
      * Print out what will happen.
      *
      * @param Transfer $transfer
-     *
-     * @return void
+     * @param          $target
      */
-    protected function printDryRun(Transfer $transfer)
+    protected function printDryRun(Transfer $transfer, $target)
     {
-        $this->printBlock(['Dry run!', 'No remote files will be modified.']);
-
-        if (count($transfer->getFilesToUpload()) === 0 && count($transfer->getFilesToDelete()) === 0) {
-            $this->output->writeln('<info>   No files to upload.</info>');
-
-            return;
+        //
+        $tableRows = [];
+        foreach ($transfer->getFilesToUpload() as $file) {
+            $tableRows[] = [$file, $this->fileSizeConvert(filesize($file)), 'Upload'];
         }
-
         if (count($transfer->getFilesToDelete()) > 0) {
-            $this->output->writeln('<error>   Files that will be deleted in next deployment:</error>');
-            foreach ($transfer->getFilesToDelete() as $file_to_delete) {
-                $this->output->writeln('      ' . $file_to_delete);
-            }
+            $tableRows[] = new TableSeparator();
+        }
+        foreach ($transfer->getFilesToDelete() as $file) {
+            $tableRows[] = [$file, $this->fileSizeConvert(filesize($file)), '<error>Delete</error>'];
         }
 
-        if (count($transfer->getFilesToUpload()) > 0) {
-            $this->output->writeln('<info>   Files that will be uploaded in next deployment:</info>');
-            foreach ($transfer->getFilesToUpload() as $file_to_upload) {
-                $this->output->writeln('      ' . $file_to_upload);
+        $tableCells = [
+            [new TableCell('SERVER: </info>' . $target, ['colspan' => 3])],
+        ];
+        if ($transfer->hasRemoteRevision() === false) {
+            $tableCells[] = [
+                new TableCell('<comment>No revision found - uploading everything...</comment>', ['colspan' => 3])
+            ];
+        }
+        $tableCells[] = ['File', 'Size', 'Action'];
+
+        $table = new Table($this->output);
+        $table->setHeaders($tableCells)->setRows($tableRows);
+        $table->render();
+        $this->output->writeln('');
+    }
+
+    /**
+     * Convert $bytes in human readable size.
+     *
+     * @param integer $bytes
+     *
+     * @return string
+     */
+    private function fileSizeConvert($bytes)
+    {
+        $result = 0;
+        $bytes = floatval($bytes);
+        $arBytes = [
+            0 => [
+                "UNIT" => "TB",
+                "VALUE" => pow(1024, 4)
+            ],
+            1 => [
+                "UNIT" => "GB",
+                "VALUE" => pow(1024, 3)
+            ],
+            2 => [
+                "UNIT" => "MB",
+                "VALUE" => pow(1024, 2)
+            ],
+            3 => [
+                "UNIT" => "KB",
+                "VALUE" => 1024
+            ],
+            4 => [
+                "UNIT" => "B",
+                "VALUE" => 1
+            ],
+        ];
+
+        foreach ($arBytes as $arItem) {
+            if ($bytes >= $arItem["VALUE"]) {
+                $result = $bytes / $arItem["VALUE"];
+                $result = str_replace(".", ",", strval(round($result, 2))) . " " . $arItem["UNIT"];
+                break;
             }
         }
+        return $result;
     }
 
     /**

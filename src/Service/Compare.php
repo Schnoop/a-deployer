@@ -5,6 +5,7 @@ namespace Antwerpes\ADeployer\Service;
 use Antwerpes\ADeployer\Model\Transfer;
 use League\Flysystem\Filesystem;
 use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class Compare.
@@ -27,15 +28,22 @@ class Compare
     private $git;
 
     /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
      * Compare constructor.
      *
-     * @param Filesystem $filesystem
-     * @param Git        $git
+     * @param Filesystem      $filesystem
+     * @param Git             $git
+     * @param OutputInterface $output
      */
-    public function __construct(Filesystem $filesystem, Git $git)
+    public function __construct(Filesystem $filesystem, Git $git, OutputInterface $output)
     {
         $this->filesystem = $filesystem;
         $this->git = $git;
+        $this->output = $output;
     }
 
     /**
@@ -53,6 +61,7 @@ class Compare
         $resultSet = new Transfer();
         if ($this->filesystem->has($this->revisionFile) === true) {
             $remoteRevision = $this->filesystem->read($this->revisionFile);
+            $resultSet->setRemoteRevision($remoteRevision);
         }
         $result = $this->git->diff($remoteRevision, $localRevision);
 

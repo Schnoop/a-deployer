@@ -29,6 +29,11 @@ class Transfer
     protected $skip = [];
 
     /**
+     * @var string
+     */
+    protected $remoteRevision = null;
+
+    /**
      * Add file to upload array.
      *
      * @param string $file
@@ -127,4 +132,29 @@ class Transfer
     {
         $this->upload = array_merge($this->upload, $files);
     }
+
+    /**
+     * @return bool
+     */
+    public function hasRemoteRevision()
+    {
+        return $this->remoteRevision !== null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemoteRevision()
+    {
+        return $this->remoteRevision;
+    }
+
+    /**
+     * @param string $remoteRevision
+     */
+    public function setRemoteRevision($remoteRevision)
+    {
+        $this->remoteRevision = $remoteRevision;
+    }
+
 }
