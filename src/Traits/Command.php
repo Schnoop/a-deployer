@@ -75,7 +75,7 @@ trait Command
         if (file_exists($file) === false) {
             throw new \Symfony\Component\Console\Exception\RuntimeException('Whoooops! '.$file.' does not exist.');
         }
-        $values = parse_ini_file($file, true);
+        $values = @parse_ini_file($file, true);
         if ($values === false) {
             throw new \Symfony\Component\Console\Exception\RuntimeException($file.' is not a valid .ini file.');
         }
@@ -136,25 +136,6 @@ trait Command
         $output->writeln('<fire>-----------------------------------------------</>');
         $output->writeln('<fire>!  BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT  !</>');
         $output->writeln('<fire>-----------------------------------------------</>');
-        $output->writeln('');
-    }
-
-    /**
-     * Print info banner about deployment.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
-    protected function printDeploymentBanner(InputInterface $input, OutputInterface $output)
-    {
-        $target = $input->getArgument('target');
-        $revision = $this->getGitInstance()->getLatestRevision();
-        $branch = $this->getGitInstance()->getCurrentBranch();
-        $output->writeln('<info>Will deployment revision </info><comment>"'.$revision['sha1'].'"</comment><info> from </info><comment>"'.
-            $branch.'"</comment><info> branch to target </info><comment>"'.$target.'"</comment>');
-        $output->writeln('<info>Revision created from </info><comment>"'.$revision['author'].'"</comment>');
-        $output->writeln('<info>Revision created at </info><comment>"'.$revision['date']->format('d.m.Y H:i:s').'"</comment>');
-        $output->writeln('<info>Revision message </info><comment>"'.$revision['message'].'"</comment>');
         $output->writeln('');
     }
 

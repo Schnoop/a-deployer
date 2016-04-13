@@ -69,9 +69,6 @@ class Includes
     {
         $arrayItems = [];
         $handle = opendir($directory);
-        if (!$handle) {
-            return $arrayItems;
-        }
         while (false !== ($file = readdir($handle))) {
             preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
             if (!$skip) {

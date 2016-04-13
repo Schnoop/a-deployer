@@ -88,9 +88,6 @@ class RunCommand extends AbstractCommand
             throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
         }
 
-        // Show basic information about deployment.
-        $this->printDeploymentBanner($this->input, $this->output);
-
         // Show alert message.
         $this->targetConfig = $this->getConfig()->getConfigForTarget($target);
         if ($this->targetConfig->isCriticalDeployment() === true) {
