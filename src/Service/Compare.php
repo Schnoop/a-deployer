@@ -11,7 +11,6 @@ use Symfony\Component\Console\Exception\RuntimeException;
  */
 class Compare
 {
-
     /**
      * @var string
      */
@@ -20,9 +19,9 @@ class Compare
     /**
      * Compare locale with remote revision and return an array with files to upload/delete.
      *
-     * @param string $localRevision
-     * @param Filesystem      $filesystem
-     * @param Git             $git
+     * @param string     $localRevision
+     * @param Filesystem $filesystem
+     * @param Git        $git
      *
      * @throws RuntimeException
      *

@@ -7,10 +7,10 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        # Warning:
+        // Warning:
         PHPUnit_Framework_Error_Warning::$enabled = false;
 
-        # notice, strict:
+        // notice, strict:
         PHPUnit_Framework_Error_Notice::$enabled = false;
     }
 
