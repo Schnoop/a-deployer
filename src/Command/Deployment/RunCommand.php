@@ -178,7 +178,7 @@ class RunCommand extends AbstractCommand
     {
         // Show alert message.
         if ($this->targetConfig->isCriticalDeployment() === true) {
-            $this->printCriticalBanner($this->output);
+            $this->printBlock(['BE CAREFUL:', 'THIS IS A CRITICAL DEPLOYMENT'], 'warning');
         }
 
         $helper = $this->getHelper('question');

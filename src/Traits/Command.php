@@ -61,8 +61,11 @@ trait Command
         $this->input = $input;
         $this->output = $output;
 
-        $style = new OutputFormatterStyle('black', 'yellow', ['bold', 'blink']);
+        $style = new OutputFormatterStyle('black', 'yellow', ['bold']);
         $output->getFormatter()->setStyle('notification', $style);
+
+        $style = new OutputFormatterStyle('white', 'red', ['bold']);
+        $output->getFormatter()->setStyle('warning', $style);
     }
 
     /**
@@ -174,23 +177,6 @@ trait Command
         $this->output->writeln('');
         $this->output->writeln($formattedBlock);
         $this->output->writeln('');
-    }
-
-    /**
-     * Print red banner to tell the user that he has to be careful.
-     *
-     * @param OutputInterface $output
-     *
-     * @return void
-     */
-    protected function printCriticalBanner(OutputInterface $output)
-    {
-        $style = new OutputFormatterStyle('white', 'red', ['bold']);
-        $output->getFormatter()->setStyle('fire', $style);
-        $output->writeln('<fire>-----------------------------------------------</>');
-        $output->writeln('<fire>!  BE CAREFUL: THIS IS A CRITICAL DEPLOYMENT  !</>');
-        $output->writeln('<fire>-----------------------------------------------</>');
-        $output->writeln('');
     }
 
     /**

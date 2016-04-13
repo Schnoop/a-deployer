@@ -82,4 +82,18 @@ class TransferTest extends PHPUnit_Framework_TestCase
         $transfer->addFilesToUpload(['foo', 'barFoo']);
         $this->assertEquals(['foo', 'bar', 'foo', 'barFoo'], $transfer->getFilesToUpload());
     }
+
+    public function testSetRemoteRevision()
+    {
+        $transfer = new Transfer();
+        $transfer->setRemoteRevision('fooBar');
+        $this->assertTrue($transfer->hasRemoteRevision());
+        $this->assertEquals('fooBar', $transfer->getRemoteRevision());
+    }
+
+    public function testHasNoRemoteRevision()
+    {
+        $transfer = new Transfer();
+        $this->assertFalse($transfer->hasRemoteRevision());
+    }
 }
