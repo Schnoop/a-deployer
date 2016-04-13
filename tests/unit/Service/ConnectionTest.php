@@ -5,6 +5,15 @@
  */
 class ConnectionTest extends PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        # Warning:
+        PHPUnit_Framework_Error_Warning::$enabled = false;
+
+        # notice, strict:
+        PHPUnit_Framework_Error_Notice::$enabled = false;
+    }
+
     public function testExceptionIfNoServerFound()
     {
         $this->expectException('\Symfony\Component\Console\Exception\RuntimeException');
@@ -36,5 +45,20 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         }
         $connection = new \Antwerpes\ADeployer\Service\Connection();
         $this->assertInstanceOf('\League\Flysystem\Adapter\Ftp', $connection->createFtpConnection([]));
+    }
+
+
+    public function testGetConnectionForFtp()
+    {
+        if (defined('FTP_BINARY') === false) {
+            define('FTP_BINARY', 2);
+        }
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Could not connect to host: , port:21');
+
+        $target = new \Antwerpes\ADeployer\Model\Target('demo', ['server' => ['scheme' => 'ftp']]);
+        $connection = new \Antwerpes\ADeployer\Service\Connection();
+        $connection->getConnection($target);
     }
 }
