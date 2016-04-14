@@ -26,7 +26,7 @@ class Compare
      *
      * @return Transfer
      */
-    public function compare($localRevision, Filesystem $filesystem, Git $git, Transfer $resultSet)
+    public function createResultSet($localRevision, Filesystem $filesystem, Git $git, Transfer $resultSet)
     {
         $remoteRevision = null;
         if ($filesystem->has($this->revisionFile) === true) {

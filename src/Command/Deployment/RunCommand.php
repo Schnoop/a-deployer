@@ -163,7 +163,7 @@ class RunCommand extends AbstractCommand
         }
 
         $filesystem = $this->connection->getConnection($target);
-        $resultSet = $this->compare->compare('HEAD', $filesystem, $this->getGitInstance(), $this->resultSet);
+        $resultSet = $this->compare->createResultSet('HEAD', $filesystem, $this->getGitInstance(), $this->resultSet);
 
         $resultSet = $this->excludes->filter($resultSet, $target->getExcludes());
 
