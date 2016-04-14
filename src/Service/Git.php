@@ -63,20 +63,20 @@ class Git extends \SebastianBergmann\Git\Git
     /**
      * Make diff between to git revisions and return output.
      *
-     * @param string $remoteRevision
-     * @param string $localRevision
+     * @param string      $localRevision
+     * @param string|null $remoteRevision
      *
      * @return array
      */
-    public function diff($remoteRevision, $localRevision)
+    public function diff($localRevision, $remoteRevision = null)
     {
         if (empty($remoteRevision)) {
             $command = 'ls-files';
         } elseif ($localRevision === 'HEAD') {
-            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
+            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
         } else {
             // What's the point of this ELSE clause?
-            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
+            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
         }
 
         return $this->execute($command);

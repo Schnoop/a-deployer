@@ -34,7 +34,7 @@ class Compare
         ) {
             $resultSet->setRemoteRevision($remoteRevision);
         }
-        $result = $git->diff($remoteRevision, $localRevision);
+        $result = $git->diff($localRevision, $remoteRevision);
 
         if ($remoteRevision === null) {
             $resultSet->setFilesToUpload($result);
