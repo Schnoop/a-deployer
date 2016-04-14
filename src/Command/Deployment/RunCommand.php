@@ -57,7 +57,7 @@ class RunCommand extends AbstractCommand
      */
     private $deployment;
     /**
-     * @var Target
+     * @var Transfer
      */
     private $resultSet;
 
@@ -135,7 +135,7 @@ class RunCommand extends AbstractCommand
         // If a target has been chosen.
         if (strlen($target) > 0) {
             if ($this->getConfig()->isAvailableTarget($target) === false) {
-                throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+                throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
             }
             $this->deploy($this->getConfig()->getConfigForTarget($target));
 
@@ -187,8 +187,6 @@ class RunCommand extends AbstractCommand
         $this->deployment->run($filesystem, $this->output, $resultSet);
 
         $filesystem->put($this->compare->getRevisionFile(), $this->getGitInstance()->getLatestRevisionHash());
-
-        die();
     }
 
     /**
@@ -209,7 +207,7 @@ class RunCommand extends AbstractCommand
         // Ask user via console.
         $helper = $this->getHelper('question');
         $question = new Question('<info>No password has been provided for user "'
-            .$this->targetConfig['server']['username'].'". Please enter a password: </info>');
+            . $this->targetConfig['server']['username'] . '". Please enter a password: </info>');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 

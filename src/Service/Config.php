@@ -55,7 +55,7 @@ class Config
      *
      * @param string $target
      *
-     * @return Target|null
+     * @return Target
      */
     public function getConfigForTarget($target)
     {
