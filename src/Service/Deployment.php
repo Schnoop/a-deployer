@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Deployment
 {
-
     /**
      * Run.
      *
@@ -28,14 +27,14 @@ class Deployment
 
             // It can happen the path is wrong, especially with included files.
             if ($data === false) {
-                $output->writeln('<error> ! File not found - please check path: ' . $file . '</error>');
+                $output->writeln('<error> ! File not found - please check path: '.$file.'</error>');
                 continue;
             }
 
             $result = $filesystem->put($file, $data);
 
             if ($result === false) {
-                $output->writeln('<error> ! Failed to upload ' . $file . '.</error>');
+                $output->writeln('<error> ! Failed to upload '.$file.'.</error>');
             }
 
             $fileNo = str_pad(++$fileNo, strlen($numberOfFilesToUpdate), ' ', STR_PAD_LEFT);
@@ -88,14 +87,14 @@ class Deployment
                 $prefix = '';
                 // Add the parent directories to directory name
                 for ($x = 0; $x < $i; ++$x) {
-                    $prefix .= $parts[$x] . '/';
+                    $prefix .= $parts[$x].'/';
                 }
 
-                $part = $prefix . $part;
+                $part = $prefix.$part;
 
                 // If directory doesn't exist, add to files to delete
                 // Relative path won't work consistently, thus getcwd().
-                if (!is_dir(getcwd() . '/' . $part)) {
+                if (!is_dir(getcwd().'/'.$part)) {
                     $dirsToDelete[] = $part;
                 }
             }
