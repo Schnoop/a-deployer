@@ -8,7 +8,7 @@ class IncludesTest extends PHPUnit_Framework_TestCase
     public function testFilter()
     {
         $files = [
-            'tests/demo-folder/demo2/fooBar.txt',
+            //'tests/demo-folder/demo2/fooBar.txt',
         ];
         foreach ($files as $file) {
             @unlink($file);
@@ -40,7 +40,6 @@ class IncludesTest extends PHPUnit_Framework_TestCase
 
         $foldersProof = [
             'tests/demo-folder/demo2/demo2.1',
-            'tests/demo-folder/demo2/fooBar.txt',
             'tests/demo-folder/demo2',
             'tests/demo-folder/demo3',
             'tests/demo-folder/demo4',
