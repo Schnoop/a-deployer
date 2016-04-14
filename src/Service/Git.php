@@ -73,10 +73,10 @@ class Git extends \SebastianBergmann\Git\Git
         if (empty($remoteRevision)) {
             $command = 'ls-files';
         } elseif ($localRevision === 'HEAD') {
-            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
+            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
         } else {
             // What's the point of this ELSE clause?
-            $command = 'diff --name-status ' . $remoteRevision . ' ' . $localRevision;
+            $command = 'diff --name-status '.$remoteRevision.' '.$localRevision;
         }
 
         return $this->execute($command);
