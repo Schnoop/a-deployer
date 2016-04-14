@@ -1,6 +1,6 @@
 <?php
 
-namespace Antwerpes\ADeployer\Visuals;
+namespace Antwerpes\ADeployer\Visual;
 
 use Antwerpes\ADeployer\Model\Target;
 use Antwerpes\ADeployer\Model\Transfer;

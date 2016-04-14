@@ -22,15 +22,13 @@ class Compare
      * @param string     $localRevision
      * @param Filesystem $filesystem
      * @param Git        $git
-     *
-     * @throws RuntimeException
+     * @param Transfer   $resultSet
      *
      * @return Transfer
      */
-    public function compare($localRevision, Filesystem $filesystem, Git $git)
+    public function compare($localRevision, Filesystem $filesystem, Git $git, Transfer $resultSet)
     {
         $remoteRevision = null;
-        $resultSet = new Transfer();
         if ($filesystem->has($this->revisionFile) === true) {
             $remoteRevision = $filesystem->read($this->revisionFile);
             $resultSet->setRemoteRevision($remoteRevision);
@@ -57,12 +55,12 @@ class Compare
     }
 
     /**
-     * Store $revision is revision file on server.
+     * Returns name of revision file.
      *
-     * @param string $revision
+     * @return string
      */
-    public function storeRevision($revision)
+    public function getRevisionFile()
     {
-        $this->filesystem->put($this->revisionFile, $revision);
+        return $this->revisionFile;
     }
 }

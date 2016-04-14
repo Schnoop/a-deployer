@@ -4,12 +4,13 @@ namespace Antwerpes\ADeployer\Command\Deployment;
 
 use Antwerpes\ADeployer\Command\AbstractCommand;
 use Antwerpes\ADeployer\Model\Target;
+use Antwerpes\ADeployer\Model\Transfer;
 use Antwerpes\ADeployer\Service\Compare;
 use Antwerpes\ADeployer\Service\Connection;
 use Antwerpes\ADeployer\Service\Deployment;
 use Antwerpes\ADeployer\Service\Excludes;
 use Antwerpes\ADeployer\Service\Includes;
-use Antwerpes\ADeployer\Visuals\DryRun;
+use Antwerpes\ADeployer\Visual\DryRun;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,6 +48,18 @@ class RunCommand extends AbstractCommand
      * @var Target
      */
     protected $targetConfig;
+    /**
+     * @var DryRun
+     */
+    private $dryRun;
+    /**
+     * @var Deployment
+     */
+    private $deployment;
+    /**
+     * @var Target
+     */
+    private $resultSet;
 
     /**
      * RunCommand constructor.
@@ -55,14 +68,27 @@ class RunCommand extends AbstractCommand
      * @param Compare    $compare
      * @param Excludes   $excludes
      * @param Includes   $includes
+     * @param DryRun     $dryRun
+     * @param Deployment $deployment
+     * @param Transfer   $resultSet
      */
-    public function __construct(Connection $connection, Compare $compare, Excludes $excludes, Includes $includes)
-    {
+    public function __construct(
+        Connection $connection,
+        Compare $compare,
+        Excludes $excludes,
+        Includes $includes,
+        DryRun $dryRun,
+        Deployment $deployment,
+        Transfer $resultSet
+    ) {
         parent::__construct('run');
         $this->connection = $connection;
         $this->compare = $compare;
         $this->excludes = $excludes;
         $this->includes = $includes;
+        $this->dryRun = $dryRun;
+        $this->deployment = $deployment;
+        $this->resultSet = $resultSet;
     }
 
     /**
@@ -109,7 +135,7 @@ class RunCommand extends AbstractCommand
         // If a target has been chosen.
         if (strlen($target) > 0) {
             if ($this->getConfig()->isAvailableTarget($target) === false) {
-                throw new RuntimeException('"'.$target.'" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
+                throw new RuntimeException('"' . $target . '" is not a valid target. Please check available targets with "(php) bin/a-deployer targets"');
             }
             $this->deploy($this->getConfig()->getConfigForTarget($target));
 
@@ -137,7 +163,7 @@ class RunCommand extends AbstractCommand
         }
 
         $filesystem = $this->connection->getConnection($target);
-        $resultSet = $this->compare->compare('HEAD', $filesystem, $this->getGitInstance());
+        $resultSet = $this->compare->compare('HEAD', $filesystem, $this->getGitInstance(), $this->resultSet);
 
         $resultSet = $this->excludes->filter($resultSet, $target->getExcludes());
 
@@ -148,8 +174,7 @@ class RunCommand extends AbstractCommand
 
         // Dry run. Print out and leave.
         if ($this->input->getOption('dry-run') === true) {
-            $dryRun = new DryRun();
-            $dryRun->render($this->output, $resultSet, $target);
+            $this->dryRun->render($this->output, $resultSet, $target);
 
             return;
         }
@@ -159,10 +184,9 @@ class RunCommand extends AbstractCommand
             return;
         }
 
-        $deployment = new Deployment($filesystem, $this->output);
-        $deployment->run($resultSet);
+        $this->deployment->run($filesystem, $this->output, $resultSet);
 
-        $this->compare->storeRevision($this->getGitInstance()->getLatestRevisionHash());
+        $filesystem->put($this->compare->getRevisionFile(), $this->getGitInstance()->getLatestRevisionHash());
 
         die();
     }
@@ -185,7 +209,7 @@ class RunCommand extends AbstractCommand
         // Ask user via console.
         $helper = $this->getHelper('question');
         $question = new Question('<info>No password has been provided for user "'
-            .$this->targetConfig['server']['username'].'". Please enter a password: </info>');
+            . $this->targetConfig['server']['username'] . '". Please enter a password: </info>');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 

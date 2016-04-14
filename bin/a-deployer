@@ -9,6 +9,15 @@ $container = new Container();
 $container['service.connection'] = function ($c) {
     return new \Antwerpes\ADeployer\Service\Connection();
 };
+$container['service.deployment'] = function ($c) {
+    return new \Antwerpes\ADeployer\Service\Deployment();
+};
+$container['visual.dryrun'] = function ($c) {
+    return new \Antwerpes\ADeployer\Visual\DryRun();
+};
+$container['model.transfer'] = function ($c) {
+    return new \Antwerpes\ADeployer\Model\Transfer();
+};
 $container['service.compare'] = function ($c) {
     return new \Antwerpes\ADeployer\Service\Compare();
 };
@@ -23,7 +32,11 @@ $container['command.deployment.run'] = function ($c) {
         $c['service.connection'],
         $c['service.compare'],
         $c['service.excludes'],
-        $c['service.includes']);
+        $c['service.includes'],
+        $c['visual.dryrun'],
+        $c['service.deployment'],
+        $c['model.transfer']
+    );
 };
 
 use Symfony\Component\Console\Application;

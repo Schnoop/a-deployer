@@ -11,34 +11,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Deployment
 {
-    /**
-     * @var Filesystem
-     */
-    protected $filesystem;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * Compare constructor.
-     *
-     * @param Filesystem      $filesystem
-     * @param OutputInterface $output
-     */
-    public function __construct(Filesystem $filesystem, OutputInterface $output)
-    {
-        $this->filesystem = $filesystem;
-        $this->output = $output;
-    }
 
     /**
      * Run.
      *
-     * @param Transfer $transfer
+     * @param Transfer        $transfer
+     * @param Filesystem      $filesystem
+     * @param OutputInterface $output
      */
-    public function run(Transfer $transfer)
+    public function run(Filesystem $filesystem, OutputInterface $output, Transfer $transfer)
     {
         $filesToUpload = $transfer->getFilesToUpload();
         $numberOfFilesToUpdate = count($filesToUpload);
@@ -47,42 +28,42 @@ class Deployment
 
             // It can happen the path is wrong, especially with included files.
             if ($data === false) {
-                $this->output->writeln('<error> ! File not found - please check path: '.$file.'</error>');
+                $output->writeln('<error> ! File not found - please check path: ' . $file . '</error>');
                 continue;
             }
 
-            $result = $this->filesystem->put($file, $data);
+            $result = $filesystem->put($file, $data);
 
             if ($result === false) {
-                $this->output->writeln('<error> ! Failed to upload '.$file.'.</error>');
+                $output->writeln('<error> ! Failed to upload ' . $file . '.</error>');
             }
 
             $fileNo = str_pad(++$fileNo, strlen($numberOfFilesToUpdate), ' ', STR_PAD_LEFT);
-            $this->output->writeln(" ^ $fileNo of $numberOfFilesToUpdate {$file}");
+            $output->writeln(" ^ $fileNo of $numberOfFilesToUpdate {$file}");
         }
 
         $filesToDelete = $transfer->getFilesToDelete();
         $numberOfFilesToDelete = count($filesToDelete);
         foreach ($transfer->getFilesToDelete() as $fileNo => $file) {
             $fileNo = str_pad(++$fileNo, strlen($numberOfFilesToDelete), ' ', STR_PAD_LEFT);
-            if ($this->filesystem->has($file) === false) {
-                $this->output->writeln("<error> ! $fileNo of $numberOfFilesToDelete </error> {$file} not found");
+            if ($filesystem->has($file) === false) {
+                $output->writeln("<error> ! $fileNo of $numberOfFilesToDelete </error> {$file} not found");
                 continue;
             }
-            $this->filesystem->delete($file);
-            $this->output->writeln("<error> × $fileNo of $numberOfFilesToDelete</error> {$file}");
+            $filesystem->delete($file);
+            $output->writeln("<error> × $fileNo of $numberOfFilesToDelete</error> {$file}");
         }
 
         $dirsToDelete = $this->hasDeletedDirectories($filesToDelete);
         $numberOfDirsToDelete = count($dirsToDelete);
         foreach ($dirsToDelete as $dirNo => $dir) {
             $dirNo = str_pad(++$dirNo, strlen($numberOfDirsToDelete), ' ', STR_PAD_LEFT);
-            if ($this->filesystem->has($dir) === false) {
-                $this->output->writeln("<error> ! $dirNo of $numberOfDirsToDelete</error> {$dir} not found");
+            if ($filesystem->has($dir) === false) {
+                $output->writeln("<error> ! $dirNo of $numberOfDirsToDelete</error> {$dir} not found");
                 continue;
             }
-            $this->filesystem->deleteDir($dir);
-            $this->output->writeln("<error> × $dirNo of $numberOfDirsToDelete</error> {$dir}");
+            $filesystem->deleteDir($dir);
+            $output->writeln("<error> × $dirNo of $numberOfDirsToDelete</error> {$dir}");
         }
     }
 
@@ -107,14 +88,14 @@ class Deployment
                 $prefix = '';
                 // Add the parent directories to directory name
                 for ($x = 0; $x < $i; ++$x) {
-                    $prefix .= $parts[$x].'/';
+                    $prefix .= $parts[$x] . '/';
                 }
 
-                $part = $prefix.$part;
+                $part = $prefix . $part;
 
                 // If directory doesn't exist, add to files to delete
                 // Relative path won't work consistently, thus getcwd().
-                if (!is_dir(getcwd().'/'.$part)) {
+                if (!is_dir(getcwd() . '/' . $part)) {
                     $dirsToDelete[] = $part;
                 }
             }
