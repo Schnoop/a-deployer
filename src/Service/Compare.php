@@ -29,8 +29,9 @@ class Compare
     public function createResultSet($localRevision, Filesystem $filesystem, Git $git, Transfer $resultSet)
     {
         $remoteRevision = null;
-        if ($filesystem->has($this->revisionFile) === true) {
-            $remoteRevision = $filesystem->read($this->revisionFile);
+        if ($filesystem->has($this->revisionFile) === true
+            && ($remoteRevision = $filesystem->read($this->revisionFile)) !== false
+        ) {
             $resultSet->setRemoteRevision($remoteRevision);
         }
         $result = $git->diff($remoteRevision, $localRevision);
